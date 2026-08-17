@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, send_file
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
 import os
+import re
 from ldap3 import Server, Connection, ALL
 import requests
 import pandas as pd
@@ -448,6 +449,13 @@ def agent_report():
             "status": "error",
             "message": str(e)
         }), 500
+# =========================================================
+# LOGOUT COMPATIBILITY (LOGIN REMOVED)
+# =========================================================
+@app.route("/logout")
+def logout():
+    return redirect("/menu")
+
 # =========================================================
 # MENU
 # =========================================================

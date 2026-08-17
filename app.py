@@ -5,7 +5,6 @@ import os
 from ldap3 import Server, Connection, ALL
 import requests
 import pandas as pd
-import psycopg2
 import nmap
 import socket
 try:
@@ -19,7 +18,6 @@ except ImportError:
     pythoncom = None
 
 import traceback
-from psycopg2.extras import RealDictCursor
 import time
 import json
 from flask import request, jsonify
@@ -54,6 +52,240 @@ DOMAIN_USER = os.getenv("DOMAIN_USER", "")
 DOMAIN_PASSWORD = os.getenv("DOMAIN_PASSWORD", "")
 DOMAIN_BASE = os.getenv("DOMAIN_BASE", "")
 
+
+# =========================================================
+# PUBLIC DEMO DATA (NO DATABASE)
+# =========================================================
+# This public HR demo intentionally does not connect to PostgreSQL.
+# Data lives only in this process and resets whenever Render restarts/redeploys.
+
+from copy import deepcopy
+
+DEMO_STORE = {
+    "employees": [
+        {"id": 1, "employee_code": "EMP001", "name": "Demo User", "start_date": "2025-01-06",
+         "department": "Information Technology", "position": "IT Support"},
+        {"id": 2, "employee_code": "EMP002", "name": "Sample Employee", "start_date": "2025-06-02",
+         "department": "Accounting", "position": "Accountant"},
+    ],
+    "computers": [
+        {"id": 1, "employee_id": 1, "pc_name": "DEMO-PC-01", "ip_address": "192.168.0.101",
+         "serial_number": "DEMO-SN-001"},
+    ],
+    "licenses": [
+        {"id": 1, "employee_id": 1, "software": "Business Std", "start_date": "2026-01-01",
+         "expiry_date": "2027-01-01", "machine_name": "DEMO-PC-01",
+         "ip_address": "192.168.0.101", "serial_number": "DEMO-SN-001"},
+    ],
+    "departments": [
+        {"id": 1, "name": "Information Technology"},
+        {"id": 2, "name": "Accounting"},
+        {"id": 3, "name": "Human Resources"},
+    ],
+    "notebooks": [
+        {"id": 1, "device_type": "Notebook", "asset_code": "NB-DEMO-001", "brand": "Dell",
+         "model": "Latitude Demo", "cpu": "Intel Core i5", "ram": "16 GB", "storage": "512 GB SSD",
+         "os": "Windows 11 Pro", "serial_number": "NB-SN-DEMO-001",
+         "purchase_date": "2025-01-10", "warranty_expire": "2028-01-10",
+         "price": 32000, "note": "Demo asset", "status": "available"},
+    ],
+    "notebook_history": [],
+    "notebook_repairs": [],
+    "network_devices": [
+        {"id": 1, "ip_address": "192.168.0.1", "hostname": "DEMO-GATEWAY",
+         "mac_address": "00:00:00:00:00:01", "vendor": "Demo Vendor",
+         "status": "online", "last_seen": "Demo"},
+    ],
+    "domain_computers": [
+        {"id": 1, "hostname": "DEMO-PC-01", "ip_address": "192.168.0.101",
+         "mac_address": "00:00:00:00:00:02", "manufacturer": "Demo",
+         "model": "Demo Workstation", "serial_number": "DEMO-SN-001",
+         "cpu": "Intel Core i5", "gpu": "Integrated", "ram_gb": 16,
+         "storage": 512, "storage_detail": "[]", "windows_version": "Windows 11 Pro",
+         "windows_build": "Demo", "username": "demo.user", "bios_version": "Demo",
+         "mainboard": "Demo", "uptime_hours": 8, "antivirus": "Microsoft Defender",
+         "wifi_ssid": "DEMO-WIFI", "cpu_usage": 12, "ram_usage": 45,
+         "status": "online", "last_seen": "Demo"},
+    ],
+}
+
+class DemoCursor:
+    def __init__(self):
+        self._rows = []
+        self._one = None
+
+    def execute(self, query, params=None):
+        q = " ".join(query.lower().split())
+        params = params or ()
+
+        # SELECT helpers
+        if "from employees e" in q and "left join computers" in q and "left join licenses" in q:
+            rows = []
+            for e in DEMO_STORE["employees"]:
+                comps = [c for c in DEMO_STORE["computers"] if c.get("employee_id") == e["id"]] or [None]
+                lics = [l for l in DEMO_STORE["licenses"] if l.get("employee_id") == e["id"]] or [None]
+                for c in comps:
+                    for l in lics:
+                        rows.append({
+                            **e,
+                            "pc_name": c.get("pc_name") if c else None,
+                            "ip_address": c.get("ip_address") if c else None,
+                            "serial_number": c.get("serial_number") if c else None,
+                            "software": l.get("software") if l else None,
+                            "license_start": l.get("start_date") if l else None,
+                            "start_date": l.get("start_date") if (" l.start_date" in q and l) else e.get("start_date"),
+                            "expiry_date": l.get("expiry_date") if l else None,
+                        })
+                self._rows = rows
+            return
+
+        if "from employees e" in q and "join licenses l" in q:
+            self._rows = [
+                {"name": e["name"], "software": l["software"], "expiry_date": l.get("expiry_date"),
+                 "position": e.get("position")}
+                for e in DEMO_STORE["employees"]
+                for l in DEMO_STORE["licenses"] if l.get("employee_id") == e["id"]
+            ]
+            return
+
+        if "select count(*)" in q and "from employees" in q:
+            self._one = {"count": len(DEMO_STORE["employees"])}
+            return
+        if "select count(*)" in q and "from licenses" in q:
+            self._one = {"count": len(DEMO_STORE["licenses"])}
+            return
+
+        table_match = re.search(r"from ([a-z_]+)", q)
+        if q.startswith("select") and table_match:
+            table = table_match.group(1)
+            rows = deepcopy(DEMO_STORE.get(table, []))
+
+            if "where id=%s" in q and params:
+                rows = [r for r in rows if r.get("id") == int(params[0])]
+            elif "where employee_id=%s" in q and params:
+                rows = [r for r in rows if r.get("employee_id") == int(params[0])]
+            elif "where employee_code=%s" in q and params:
+                rows = [r for r in rows if str(r.get("employee_code")) == str(params[0])]
+            elif "where ip_address=%s" in q and params:
+                rows = [r for r in rows if str(r.get("ip_address")) == str(params[0])]
+            elif "where status='available'" in q:
+                rows = [r for r in rows if r.get("status") == "available"]
+            self._rows = rows
+            self._one = rows[0] if rows else None
+            return
+
+        # INSERT employee
+        if q.startswith("insert into employees"):
+            new_id = max([r["id"] for r in DEMO_STORE["employees"]] + [0]) + 1
+            if "employee_code" in q:
+                employee_code, name, start_date, department, position = params[:5]
+                row = {"id": new_id, "employee_code": employee_code, "name": name,
+                       "start_date": start_date, "department": department, "position": position}
+            else:
+                name, position = params[:2]
+                row = {"id": new_id, "employee_code": f"DEMO{new_id:03}", "name": name,
+                       "start_date": None, "department": None, "position": position}
+            DEMO_STORE["employees"].append(row)
+            self._one = {"id": new_id}
+            return
+
+        if q.startswith("insert into departments"):
+            new_id = max([r["id"] for r in DEMO_STORE["departments"]] + [0]) + 1
+            DEMO_STORE["departments"].append({"id": new_id, "name": params[0]})
+            return
+
+        if q.startswith("insert into notebooks"):
+            keys = ["device_type","asset_code","brand","model","cpu","ram","storage","os",
+                    "serial_number","purchase_date","warranty_expire","price","note","status"]
+            new_id = max([r["id"] for r in DEMO_STORE["notebooks"]] + [0]) + 1
+            DEMO_STORE["notebooks"].append({"id": new_id, **dict(zip(keys, params))})
+            return
+
+        if q.startswith("insert into notebook_history"):
+            new_id = max([r.get("id",0) for r in DEMO_STORE["notebook_history"]] + [0]) + 1
+            DEMO_STORE["notebook_history"].append({
+                "id": new_id, "notebook_id": int(params[0]), "employee_id": int(params[1]),
+                "assign_date": params[2], "return_date": None, "status": "using"
+            })
+            return
+
+        if q.startswith("insert into notebook_repairs"):
+            new_id = max([r.get("id",0) for r in DEMO_STORE["notebook_repairs"]] + [0]) + 1
+            DEMO_STORE["notebook_repairs"].append({
+                "id": new_id, "notebook_id": int(params[0]), "repair_date": params[1],
+                "repair_type": params[2], "detail": params[3], "cost": params[4],
+                "repaired_by": params[5]
+            })
+            return
+
+        # Generic no-op for network/agent writes in public demo.
+        if q.startswith(("insert into domain_computers", "insert into network_devices",
+                         "update network_devices")):
+            return
+
+        # Basic deletes/updates used by UI.
+        if q.startswith("delete from") and params:
+            m = re.search(r"delete from ([a-z_]+)", q)
+            if m:
+                table = m.group(1)
+                if table in DEMO_STORE:
+                    if "employee_id=%s" in q:
+                        DEMO_STORE[table] = [r for r in DEMO_STORE[table] if r.get("employee_id") != int(params[0])]
+                    elif "notebook_id=%s" in q:
+                        DEMO_STORE[table] = [r for r in DEMO_STORE[table] if r.get("notebook_id") != int(params[0])]
+                    elif "where id=%s" in q:
+                        DEMO_STORE[table] = [r for r in DEMO_STORE[table] if r.get("id") != int(params[0])]
+            return
+
+        if q.startswith("update notebooks") and params:
+            target_id = int(params[-1])
+            for r in DEMO_STORE["notebooks"]:
+                if r["id"] == target_id:
+                    if "status='in_use'" in q:
+                        r["status"] = "in_use"
+                    elif "status='available'" in q:
+                        r["status"] = "available"
+            return
+
+        if q.startswith("update notebook_history") and params:
+            target = int(params[0])
+            for r in DEMO_STORE["notebook_history"]:
+                if r.get("notebook_id") == target and r.get("status") == "using":
+                    r["status"] = "returned"
+                    r["return_date"] = datetime.today().date().isoformat()
+            return
+
+        # Keep demo resilient: unsupported SQL does not crash the public showcase.
+        print("DEMO SQL skipped:", q[:180])
+
+    def fetchall(self):
+        return deepcopy(self._rows)
+
+    def fetchone(self):
+        if self._one is not None:
+            return deepcopy(self._one)
+        return deepcopy(self._rows[0]) if self._rows else None
+
+    def close(self):
+        pass
+
+class DemoConnection:
+    def cursor(self, *args, **kwargs):
+        return DemoCursor()
+
+    def commit(self):
+        pass
+
+    def rollback(self):
+        pass
+
+    def close(self):
+        pass
+
+def get_db():
+    return DemoConnection()
+
+
 # =========================================================
 # HEALTH CHECK
 # =========================================================
@@ -69,41 +301,6 @@ def health():
         }
     }, 200
 
-# =========================================================
-# DATABASE
-# =========================================================
-
-def get_db():
-    """
-    PostgreSQL connection.
-
-    On Render:
-      Set DATABASE_URL to the Internal Database URL from Render PostgreSQL.
-
-    Local development:
-      DB_HOST, DB_NAME, DB_USER, DB_PASSWORD and DB_PORT can be used.
-    """
-    database_url = os.getenv("DATABASE_URL")
-
-    if database_url:
-        # Some providers still expose postgres://. psycopg2 accepts
-        # postgresql:// more consistently.
-        if database_url.startswith("postgres://"):
-            database_url = database_url.replace("postgres://", "postgresql://", 1)
-
-        return psycopg2.connect(
-            database_url,
-            cursor_factory=RealDictCursor
-        )
-
-    return psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        database=os.getenv("DB_NAME", "license_system"),
-        user=os.getenv("DB_USER", "postgres"),
-        password=os.getenv("DB_PASSWORD", ""),
-        port=os.getenv("DB_PORT", "5432"),
-        cursor_factory=RealDictCursor
-    )
 
 from flask import request, jsonify
 import json

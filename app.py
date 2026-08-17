@@ -190,6 +190,44 @@ class DemoCursor:
             self._one = {"id": new_id}
             return
 
+        if q.startswith("insert into licenses"):
+            new_id = max([r.get("id", 0) for r in DEMO_STORE["licenses"]] + [0]) + 1
+            # /add uses 7 params: employee_id, software, start, expiry, machine_name, ip_address, serial_number
+            if len(params) >= 7:
+                DEMO_STORE["licenses"].append({
+                    "id": new_id,
+                    "employee_id": int(params[0]),
+                    "software": params[1],
+                    "start_date": params[2],
+                    "expiry_date": params[3],
+                    "machine_name": params[4],
+                    "ip_address": params[5],
+                    "serial_number": params[6],
+                })
+            elif len(params) >= 4:
+                DEMO_STORE["licenses"].append({
+                    "id": new_id,
+                    "employee_id": int(params[0]),
+                    "software": params[1],
+                    "start_date": params[2],
+                    "expiry_date": params[3],
+                    "machine_name": None,
+                    "ip_address": None,
+                    "serial_number": None,
+                })
+            return
+
+        if q.startswith("insert into computers"):
+            new_id = max([r.get("id", 0) for r in DEMO_STORE["computers"]] + [0]) + 1
+            DEMO_STORE["computers"].append({
+                "id": new_id,
+                "employee_id": int(params[0]),
+                "pc_name": params[1],
+                "ip_address": params[2],
+                "serial_number": params[3],
+            })
+            return
+
         if q.startswith("insert into departments"):
             new_id = max([r["id"] for r in DEMO_STORE["departments"]] + [0]) + 1
             DEMO_STORE["departments"].append({"id": new_id, "name": params[0]})

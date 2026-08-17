@@ -14,3 +14,4 @@ werkzeug
 numpy
 cffi
 cryptography
+gunicorn

@@ -1,12 +1,11 @@
 flask
+gunicorn
 apscheduler
 ldap3
 requests
 pandas
 psycopg2-binary
 python-nmap
-pywin32
-wmi
 winrm
 openpyxl
 flask-login
@@ -14,4 +13,3 @@ werkzeug
 numpy
 cffi
 cryptography
-gunicorn

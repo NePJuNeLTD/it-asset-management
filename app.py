@@ -99,14 +99,35 @@ DEMO_STORE = {
     ],
     "domain_computers": [
         {"id": 1, "hostname": "DEMO-PC-01", "ip_address": "192.168.0.101",
-         "mac_address": "00:00:00:00:00:02", "manufacturer": "Demo",
-         "model": "Demo Workstation", "serial_number": "DEMO-SN-001",
-         "cpu": "Intel Core i5", "gpu": "Integrated", "ram_gb": 16,
-         "storage": 512, "storage_detail": "[]", "windows_version": "Windows 11 Pro",
-         "windows_build": "Demo", "username": "demo.user", "bios_version": "Demo",
-         "mainboard": "Demo", "uptime_hours": 8, "antivirus": "Microsoft Defender",
-         "wifi_ssid": "DEMO-WIFI", "cpu_usage": 12, "ram_usage": 45,
-         "status": "online", "last_seen": "Demo"},
+         "mac_address": "00:00:00:00:00:02", "manufacturer": "Dell",
+         "model": "OptiPlex 7010", "serial_number": "DEMO-SN-001",
+         "cpu": "Intel Core i5-13500", "gpu": "Intel UHD Graphics", "ram_gb": 16,
+         "storage": 512, "storage_detail": "[\"512 GB NVMe SSD\"]",
+         "windows_version": "Windows 11 Pro", "windows_build": "23H2",
+         "username": "demo.user", "bios_version": "1.18.0",
+         "mainboard": "Dell 0ABC", "uptime_hours": 8,
+         "antivirus": "Microsoft Defender", "wifi_ssid": "OFFICE-DEMO",
+         "cpu_usage": 18, "ram_usage": 47, "status": "online", "last_seen": "2026-08-17 14:40"},
+        {"id": 2, "hostname": "DEMO-PC-02", "ip_address": "192.168.0.102",
+         "mac_address": "00:00:00:00:00:03", "manufacturer": "HP",
+         "model": "ProDesk 400 G9", "serial_number": "DEMO-SN-002",
+         "cpu": "Intel Core i5-12500", "gpu": "Intel UHD Graphics 770", "ram_gb": 16,
+         "storage": 512, "storage_detail": "[\"512 GB SSD\"]",
+         "windows_version": "Windows 11 Pro", "windows_build": "23H2",
+         "username": "account.demo", "bios_version": "02.15",
+         "mainboard": "HP Demo Board", "uptime_hours": 23,
+         "antivirus": "Microsoft Defender", "wifi_ssid": "OFFICE-DEMO",
+         "cpu_usage": 9, "ram_usage": 39, "status": "online", "last_seen": "2026-08-17 14:38"},
+        {"id": 3, "hostname": "DEMO-PC-03", "ip_address": "192.168.0.103",
+         "mac_address": "00:00:00:00:00:04", "manufacturer": "Lenovo",
+         "model": "ThinkCentre Neo 50s", "serial_number": "DEMO-SN-003",
+         "cpu": "Intel Core i3-13100", "gpu": "Intel UHD Graphics 730", "ram_gb": 8,
+         "storage": 256, "storage_detail": "[\"256 GB SSD\"]",
+         "windows_version": "Windows 10 Pro", "windows_build": "22H2",
+         "username": "hr.demo", "bios_version": "M3AKT50A",
+         "mainboard": "Lenovo Demo Board", "uptime_hours": 0,
+         "antivirus": "Microsoft Defender", "wifi_ssid": "-",
+         "cpu_usage": 0, "ram_usage": 0, "status": "offline", "last_seen": "2026-08-17 09:15"},
     ],
 }
 
@@ -2423,21 +2444,7 @@ def department_add():
 
 @app.route("/domain-computers")
 def domain_computers():
-
-    conn = get_db()
-
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    SELECT *
-    FROM domain_computers
-    ORDER BY hostname ASC
-    """)
-
-    devices = cursor.fetchall()
-
-    conn.close()
-
+    devices = deepcopy(DEMO_STORE.get("domain_computers", []))
     return render_template(
         "domain-computers.html",
         devices=devices

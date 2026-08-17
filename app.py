@@ -24,14 +24,6 @@ import time
 import json
 from flask import request, jsonify
 
-from flask_login import (
-    LoginManager,
-    UserMixin,
-    login_user,
-    login_required,
-    logout_user
-)
-
 from werkzeug.security import (
     generate_password_hash,
     check_password_hash
@@ -76,91 +68,6 @@ def health():
             "network_scan": (not DEMO_MODE)
         }
     }, 200
-
-# =========================================================
-# LOGIN CONFIG
-# =========================================================
-
-login_manager = LoginManager()
-
-login_manager.init_app(app)
-
-login_manager.login_view = "login"
-
-# =========================================================
-# DATABASE
-# =========================================================
-
-def get_db():
-    """
-    PostgreSQL connection.
-
-    On Render:
-      Set DATABASE_URL to the Internal Database URL from Render PostgreSQL.
-
-    Local development:
-      DB_HOST, DB_NAME, DB_USER, DB_PASSWORD and DB_PORT can be used.
-    """
-    database_url = os.getenv("DATABASE_URL")
-
-    if database_url:
-        # Some providers still expose postgres://. psycopg2 accepts
-        # postgresql:// more consistently.
-        if database_url.startswith("postgres://"):
-            database_url = database_url.replace("postgres://", "postgresql://", 1)
-
-        return psycopg2.connect(
-            database_url,
-            cursor_factory=RealDictCursor
-        )
-
-    return psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        database=os.getenv("DB_NAME", "license_system"),
-        user=os.getenv("DB_USER", "postgres"),
-        password=os.getenv("DB_PASSWORD", ""),
-        port=os.getenv("DB_PORT", "5432"),
-        cursor_factory=RealDictCursor
-    )
-
-# =========================================================
-# USER MODEL
-# =========================================================
-
-class User(UserMixin):
-
-    def __init__(self, id, username, password):
-
-        self.id = id
-        self.username = username
-        self.password = password
-
-@login_manager.user_loader
-def load_user(user_id):
-
-    conn = get_db()
-
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    SELECT *
-    FROM users
-    WHERE id=%s
-    """, (user_id,))
-
-    row = cursor.fetchone()
-
-    conn.close()
-
-    if row:
-
-        return User(
-            row["id"],
-            row["username"],
-            row["password"]
-        )
-
-    return None
 
 from flask import request, jsonify
 import json
@@ -309,66 +216,10 @@ def agent_report():
             "message": str(e)
         }), 500
 # =========================================================
-# LOGIN
-# =========================================================
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-
-    if request.method == "POST":
-
-        username = request.form["username"]
-        password = request.form["password"]
-
-        conn = get_db()
-
-        cursor = conn.cursor()
-
-        cursor.execute("""
-        SELECT *
-        FROM users
-        WHERE username=%s
-        """, (username,))
-
-        row = cursor.fetchone()
-
-        conn.close()
-
-        if row and check_password_hash(
-            row["password"],
-            password
-        ):
-
-            user = User(
-                row["id"],
-                row["username"],
-                row["password"]
-            )
-
-            login_user(user)
-
-            return redirect("/menu")
-
-    return render_template("login.html")
-
-# =========================================================
-# LOGOUT
-# =========================================================
-
-@app.route("/logout")
-@login_required
-def logout():
-
-    logout_user()
-
-    return redirect("/login")
-
-# =========================================================
 # MENU
 # =========================================================
 
 @app.route("/menu")
-@login_required
 def menu():
 
     return render_template("menu.html")
@@ -382,7 +233,6 @@ def menu():
 # =========================================================
 
 @app.route("/scan-network")
-@login_required
 def scan_network():
 
     scan_network_background()
@@ -394,7 +244,6 @@ def scan_network():
 # =========================================================
 
 @app.route("/network-devices")
-@login_required
 def network_devices():
 
     conn = get_db()
@@ -709,7 +558,6 @@ def scan_network_background():
 # =========================================================
 
 @app.route("/employee-list")
-@login_required
 def employee_list():
 
     conn = get_db()
@@ -794,7 +642,6 @@ def employee_list():
 # =========================================================
 
 @app.route("/employee-add", methods=["GET", "POST"])
-@login_required
 def employee_add():
 
     conn = get_db()
@@ -858,7 +705,6 @@ def employee_add():
 # =========================================================
 
 @app.route("/employee-delete/<int:id>")
-@login_required
 def employee_delete(id):
 
     conn = get_db()
@@ -914,7 +760,6 @@ def get_status(expiry):
 # =========================================================
 
 @app.route("/")
-@login_required
 def home():
 
     status_filter = request.args.get("status")
@@ -1082,7 +927,6 @@ ORDER BY e.name ASC
 # =========================================================
 
 @app.route("/add", methods=["GET", "POST"])
-@login_required
 def add():
 
     if request.method == "POST":
@@ -1169,7 +1013,6 @@ def add():
 # =========================================================
 
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
-@login_required
 def edit(id):
 
     conn = get_db()
@@ -1291,7 +1134,6 @@ def edit(id):
     )
 
 @app.route("/employee-edit/<int:id>", methods=["GET", "POST"])
-@login_required
 def employee_edit(id):
 
     conn = get_db()
@@ -1403,7 +1245,6 @@ def employee_edit(id):
 # =========================================================
 
 @app.route("/delete/<int:id>")
-@login_required
 def delete_employee(id):
 
     conn = get_db()
@@ -1449,7 +1290,6 @@ def connect_wmi_safe(target):
 # =========================================================
 
 @app.route("/import-excel", methods=["GET", "POST"])
-@login_required
 def import_excel():
 
     if request.method == "POST":
@@ -1534,7 +1374,6 @@ def import_excel():
 # =========================================================
 
 @app.route("/export-excel")
-@login_required
 def export_excel():
 
     conn = get_db()
@@ -1665,7 +1504,6 @@ def export_excel():
 # =========================================================
 
 @app.route("/api/dashboard")
-@login_required
 def dashboard_api():
 
     conn = get_db()
@@ -1826,7 +1664,6 @@ def auto_check_expiry():
 # =========================================================
 
 @app.route("/send-alert")
-@login_required
 def send_alert():
 
     auto_check_expiry()
@@ -1834,7 +1671,6 @@ def send_alert():
     return "Alert Sent"
 
 @app.route("/notebooks")
-@login_required
 def notebooks():
 
     conn = get_db()
@@ -1871,7 +1707,6 @@ def notebooks():
 # =========================================================
 
 @app.route("/notebook-add", methods=["GET", "POST"])
-@login_required
 def notebook_add():
 
     conn = get_db()
@@ -1956,7 +1791,6 @@ def notebook_add():
     return render_template("notebook-add.html")
 
 @app.route("/device/<int:id>")
-@login_required
 def device_detail(id):
 
     conn = get_db()
@@ -1993,7 +1827,6 @@ def device_detail(id):
 # =========================================================
 
 @app.route("/notebook-history")
-@login_required
 def notebook_history():
 
     conn = get_db()
@@ -2044,7 +1877,6 @@ def notebook_history():
 # =========================================================
 
 @app.route("/return-notebook/<int:id>")
-@login_required
 def return_notebook(id):
 
     conn = get_db()
@@ -2079,7 +1911,6 @@ def return_notebook(id):
 # =========================================================
 
 @app.route("/delete-notebook/<int:id>")
-@login_required
 def delete_notebook(id):
 
     conn = get_db()
@@ -2105,7 +1936,6 @@ def delete_notebook(id):
     return redirect("/notebooks")
 
 @app.route("/notebook-repairs/<int:id>")
-@login_required
 def notebook_repairs(id):
 
     conn = get_db()
@@ -2139,7 +1969,6 @@ def notebook_repairs(id):
     )
 
 @app.route("/add-repair/<int:id>", methods=["POST"])
-@login_required
 def add_repair(id):
 
     repair_date = request.form["repair_date"]
@@ -2185,7 +2014,6 @@ def add_repair(id):
 # =========================================================
 
 @app.route("/assign-notebook", methods=["GET", "POST"])
-@login_required
 def assign_notebook():
 
     conn = get_db()
@@ -2269,7 +2097,6 @@ def assign_notebook():
 # =========================================================
 
 @app.route("/departments")
-@login_required
 def departments():
 
     conn = get_db()
@@ -2292,7 +2119,6 @@ def departments():
     )
 
 @app.route("/department-add", methods=["POST"])
-@login_required
 def department_add():
 
     name = request.form["name"]
@@ -2317,7 +2143,6 @@ def department_add():
 # =========================================================
 
 @app.route("/domain-computers")
-@login_required
 def domain_computers():
 
     conn = get_db()

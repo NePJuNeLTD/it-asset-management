@@ -1,16 +1,25 @@
 from flask import Flask, render_template, request, redirect, send_file
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
+import os
 from ldap3 import Server, Connection, ALL
 import requests
 import pandas as pd
 import psycopg2
 import nmap
 import socket
-import wmi
+try:
+    import wmi
+except ImportError:
+    wmi = None
+
+try:
+    import pythoncom
+except ImportError:
+    pythoncom = None
+
 import traceback
 from psycopg2.extras import RealDictCursor
-import pythoncom
 import time
 import json
 from flask import request, jsonify
@@ -34,19 +43,40 @@ from werkzeug.security import (
 
 app = Flask(__name__)
 
-app.secret_key = "super-secret-key"
+# =========================================================
+# ENVIRONMENT / DEMO CONFIG
+# =========================================================
+# Render automatically sets RENDER=true. You can also force demo mode
+# anywhere by setting DEMO_MODE=true.
+IS_RENDER = os.getenv("RENDER", "").lower() == "true"
+DEMO_MODE = os.getenv("DEMO_MODE", "").lower() in ("1", "true", "yes") or IS_RENDER
+
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-only-change-me")
 
 # =========================================================
 # DOMAIN CONFIG
 # =========================================================
 
-DOMAIN_SERVER = "192.168.0.240"
+DOMAIN_SERVER = os.getenv("DOMAIN_SERVER", "")
+DOMAIN_USER = os.getenv("DOMAIN_USER", "")
+DOMAIN_PASSWORD = os.getenv("DOMAIN_PASSWORD", "")
+DOMAIN_BASE = os.getenv("DOMAIN_BASE", "")
 
-DOMAIN_USER = "ROYALTEC\\administrator"
+# =========================================================
+# HEALTH CHECK
+# =========================================================
+@app.route("/health")
+def health():
+    return {
+        "status": "ok",
+        "demo_mode": DEMO_MODE,
+        "platform_features": {
+            "wmi": (wmi is not None and not DEMO_MODE),
+            "ldap": (not DEMO_MODE and bool(DOMAIN_SERVER)),
+            "network_scan": (not DEMO_MODE)
+        }
+    }, 200
 
-DOMAIN_PASSWORD = "@2Wsx3edc@"
-
-DOMAIN_BASE = "DC=royaltec,DC=local"
 # =========================================================
 # LOGIN CONFIG
 # =========================================================
@@ -62,17 +92,36 @@ login_manager.login_view = "login"
 # =========================================================
 
 def get_db():
+    """
+    PostgreSQL connection.
 
-    conn = psycopg2.connect(
-        host="localhost",
-        database="license_system",
-        user="postgres",
-        password="Nepjune@230745",
-        port="5432",
+    On Render:
+      Set DATABASE_URL to the Internal Database URL from Render PostgreSQL.
+
+    Local development:
+      DB_HOST, DB_NAME, DB_USER, DB_PASSWORD and DB_PORT can be used.
+    """
+    database_url = os.getenv("DATABASE_URL")
+
+    if database_url:
+        # Some providers still expose postgres://. psycopg2 accepts
+        # postgresql:// more consistently.
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+        return psycopg2.connect(
+            database_url,
+            cursor_factory=RealDictCursor
+        )
+
+    return psycopg2.connect(
+        host=os.getenv("DB_HOST", "localhost"),
+        database=os.getenv("DB_NAME", "license_system"),
+        user=os.getenv("DB_USER", "postgres"),
+        password=os.getenv("DB_PASSWORD", ""),
+        port=os.getenv("DB_PORT", "5432"),
         cursor_factory=RealDictCursor
     )
-
-    return conn
 
 # =========================================================
 # USER MODEL
@@ -378,6 +427,14 @@ def network_devices():
 
 def get_domain_computers():
 
+    if DEMO_MODE:
+        print("LDAP disabled in demo/cloud environment")
+        return []
+
+    if not all([DOMAIN_SERVER, DOMAIN_USER, DOMAIN_PASSWORD, DOMAIN_BASE]):
+        print("LDAP configuration is incomplete")
+        return []
+
     print("CONNECT LDAP...")
 
     server = Server(
@@ -425,8 +482,8 @@ import winrm
 # CONFIG (ใช้ของคุณเดิม)
 # =========================================================
 
-# DOMAIN_USER = "ROYALTEC\\administrator"
-# DOMAIN_PASSWORD = "xxxxx"
+# DOMAIN_USER is loaded from environment
+# DOMAIN_PASSWORD is loaded from environment
 
 
 # =========================================================
@@ -434,12 +491,19 @@ import winrm
 # =========================================================
 
 def connect_winrm(host):
+    if DEMO_MODE:
+        print("WinRM disabled in demo/cloud environment")
+        return None
+
+    if not DOMAIN_USER or not DOMAIN_PASSWORD:
+        print("WinRM credentials are not configured")
+        return None
+
+    username = DOMAIN_USER.split("\\")[-1]
+
     return winrm.Session(
         host,
-        auth=(
-            DOMAIN_USER.replace("ROYALTEC\\", ""),
-            DOMAIN_PASSWORD
-        ),
+        auth=(username, DOMAIN_PASSWORD),
         transport="ntlm",
         server_cert_validation="ignore"
     )
@@ -450,6 +514,9 @@ def connect_winrm(host):
 # =========================================================
 
 def run(session, cmd):
+    if session is None:
+        return ""
+
     try:
         r = session.run_cmd(cmd)
         return r.std_out.decode(errors="ignore").strip()
@@ -463,19 +530,22 @@ def run(session, cmd):
 
 def scan_network_background():
 
+    if DEMO_MODE:
+        print("Network scan disabled in demo/cloud environment")
+        return
+
     print("START AUTO SCAN")
 
-    scanner = nmap.PortScanner(
+    try:
+        # Let python-nmap discover nmap from PATH.
+        # On the Windows production machine, ensure Nmap is installed
+        # and its directory is added to PATH.
+        scanner = nmap.PortScanner()
+    except Exception as e:
+        print("Nmap is unavailable:", e)
+        return
 
-        nmap_search_path=(
-
-            "C:\\Program Files\\Nmap\\nmap.exe",
-
-        )
-
-    )
-
-    network = "192.168.0.0/24"
+    network = os.getenv("SCAN_NETWORK", "192.168.0.0/24")
 
     scanner.scan(
 
@@ -1357,6 +1427,10 @@ def delete_employee(id):
     return redirect("/")
 
 def connect_wmi_safe(target):
+    if DEMO_MODE or wmi is None:
+        print("WMI disabled/unavailable in this environment")
+        return None
+
     for i in range(2):
         try:
             return wmi.WMI(
@@ -1367,6 +1441,7 @@ def connect_wmi_safe(target):
         except Exception as e:
             print(f"WMI retry {i+1} failed:", e)
             time.sleep(1)
+
     return None
 
 # =========================================================
@@ -1625,9 +1700,13 @@ def dashboard_api():
 # LINE CONFIG
 # =========================================================
 
-LINE_TOKEN = "7wThW1jNzgBwoDcWZJ3DkrWVkripDMlmLYShDPzssVP0sBIuRDIhEpfOipO/u1fgJCJNlUe8eScf6VM6YhNJCl+7WfvZHlXWQ5eX4ScKAhmSYp66KUbJKZuK3d/al1kB7pYFhHJsxM2RQlly9gqySQdB04t89/1O/w1cDnyilFU="
+LINE_TOKEN = os.getenv("LINE_TOKEN", "")
 
 def send_line(message):
+
+    if not LINE_TOKEN:
+        print("LINE_TOKEN is not configured; notification skipped")
+        return False
 
     headers = {
 
@@ -1659,6 +1738,7 @@ def send_line(message):
     )
 
     print(response.text)
+    return response.ok
 
 # =========================================================
 # LINE TEST
@@ -2261,14 +2341,20 @@ def domain_computers():
 
 if __name__ == "__main__":
 
-    scheduler = BackgroundScheduler(timezone="Asia/Bangkok")
+    # Scheduler is intended for the internal/local installation only.
+    # Gunicorn on Render imports app:app, so this block is not executed there.
+    if not DEMO_MODE:
+        scheduler = BackgroundScheduler(timezone="Asia/Bangkok")
+        scheduler.add_job(auto_check_expiry, trigger="cron", hour=8, minute=0)
+        scheduler.add_job(scan_network_background, trigger="interval", minutes=30)
+        scheduler.start()
+        print("Scheduler Started")
+    else:
+        print("Demo mode: scheduler disabled")
 
-    scheduler.add_job(auto_check_expiry, trigger="cron", hour=8, minute=0)
-
-    scheduler.add_job(scan_network_background, trigger="interval", minutes=30)
-
-    scheduler.start()
-
-    print("Scheduler Started")
-
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.getenv("PORT", "5000"))
+    app.run(
+        host="0.0.0.0",
+        port=port,
+        debug=os.getenv("FLASK_DEBUG", "").lower() == "true"
+    )

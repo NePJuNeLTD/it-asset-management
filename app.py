@@ -69,6 +69,42 @@ def health():
         }
     }, 200
 
+# =========================================================
+# DATABASE
+# =========================================================
+
+def get_db():
+    """
+    PostgreSQL connection.
+
+    On Render:
+      Set DATABASE_URL to the Internal Database URL from Render PostgreSQL.
+
+    Local development:
+      DB_HOST, DB_NAME, DB_USER, DB_PASSWORD and DB_PORT can be used.
+    """
+    database_url = os.getenv("DATABASE_URL")
+
+    if database_url:
+        # Some providers still expose postgres://. psycopg2 accepts
+        # postgresql:// more consistently.
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+        return psycopg2.connect(
+            database_url,
+            cursor_factory=RealDictCursor
+        )
+
+    return psycopg2.connect(
+        host=os.getenv("DB_HOST", "localhost"),
+        database=os.getenv("DB_NAME", "license_system"),
+        user=os.getenv("DB_USER", "postgres"),
+        password=os.getenv("DB_PASSWORD", ""),
+        port=os.getenv("DB_PORT", "5432"),
+        cursor_factory=RealDictCursor
+    )
+
 from flask import request, jsonify
 import json
 import traceback

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+
+<meta charset="UTF-8">
+
+<title>Repair History</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+body{
+
+    font-family:'Kanit',sans-serif;
+
+    background:#0f172a;
+
+    color:white;
+
+    padding:40px;
+}
+
+.container{
+
+    max-width:1200px;
+
+    margin:auto;
+}
+
+.card{
+
+    background:#1e293b;
+
+    padding:25px;
+
+    border-radius:20px;
+
+    margin-bottom:20px;
+}
+
+input,
+textarea{
+
+    width:100%;
+
+    padding:14px;
+
+    margin-bottom:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#334155;
+
+    color:white;
+}
+
+button{
+
+    padding:14px 20px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    cursor:pointer;
+}
+
+.repair-item{
+
+    background:#334155;
+
+    padding:20px;
+
+    border-radius:16px;
+
+    margin-top:15px;
+}
+
+.top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:10px;
+}
+
+.price{
+
+    color:#facc15;
+
+    font-weight:bold;
+}
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+}
+
+.back-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:12px 18px;
+
+    border-radius:14px;
+
+    background:#1e293b;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.25s;
+
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.back-btn:hover{
+
+    background:#334155;
+
+    transform:translateY(-2px);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+    <div>
+
+        <h1>
+            🛠 Repair History
+        </h1>
+
+        <p>
+            {{ notebook.brand }} {{ notebook.model }}
+        </p>
+
+    </div>
+
+    <a href="/notebooks"
+       class="back-btn">
+
+        ← กลับ Notebook List
+
+    </a>
+
+</div>
+
+    <div class="card">
+
+        <form method="POST"
+              action="/add-repair/{{ notebook.id }}">
+
+            <input type="date"
+                   name="repair_date"
+                   required>
+
+            <input type="text"
+                   name="repair_type"
+                   placeholder="เช่น เปลี่ยน SSD / เปลี่ยนจอ">
+
+            <textarea
+                name="detail"
+                placeholder="รายละเอียดการซ่อม"
+            ></textarea>
+
+            <input type="number"
+                   step="0.01"
+                   name="cost"
+                   placeholder="ราคา">
+
+            <input type="text"
+                   name="repaired_by"
+                   placeholder="ซ่อมโดย">
+
+            <button type="submit">
+
+                💾 บันทึกประวัติซ่อม
+
+            </button>
+
+        </form>
+
+    </div>
+
+    {% for r in repairs %}
+
+    <div class="repair-item">
+
+        <div class="top">
+
+            <strong>
+                {{ r.repair_type }}
+            </strong>
+
+            <div class="price">
+                {{ r.cost }} บาท
+            </div>
+
+        </div>
+
+        <div>
+            📅 {{ r.repair_date }}
+        </div>
+
+        <div>
+            👨‍🔧 {{ r.repaired_by }}
+        </div>
+
+        <br>
+
+        <div>
+            {{ r.detail }}
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

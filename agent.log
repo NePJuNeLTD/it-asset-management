@@ -1,0 +1,22 @@
+[2026-05-27 13:16:51] ============================================================
+[2026-05-27 13:16:51] AGENT STARTED
+[2026-05-27 13:16:51] ============================================================
+[2026-05-27 13:16:56] SEND ERROR: HTTPConnectionPool(host='192.168.0.158', port=5000): Max retries exceeded with url: /api/agent/report (Caused by NewConnectionError("HTTPConnection(host='192.168.0.158', port=5000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+[2026-05-27 13:18:01] SEND ERROR: HTTPConnectionPool(host='192.168.0.158', port=5000): Max retries exceeded with url: /api/agent/report (Caused by NewConnectionError("HTTPConnection(host='192.168.0.158', port=5000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+[2026-05-27 13:19:05] SEND ERROR: HTTPConnectionPool(host='192.168.0.158', port=5000): Max retries exceeded with url: /api/agent/report (Caused by NewConnectionError("HTTPConnection(host='192.168.0.158', port=5000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+[2026-05-27 13:20:10] SEND ERROR: HTTPConnectionPool(host='192.168.0.158', port=5000): Max retries exceeded with url: /api/agent/report (Caused by NewConnectionError("HTTPConnection(host='192.168.0.158', port=5000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+[2026-05-27 13:21:15] SEND ERROR: HTTPConnectionPool(host='192.168.0.158', port=5000): Max retries exceeded with url: /api/agent/report (Caused by NewConnectionError("HTTPConnection(host='192.168.0.158', port=5000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+[2026-05-27 13:22:19] SEND ERROR: HTTPConnectionPool(host='192.168.0.158', port=5000): Max retries exceeded with url: /api/agent/report (Caused by NewConnectionError("HTTPConnection(host='192.168.0.158', port=5000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+[2026-05-27 13:24:22] ============================================================
+[2026-05-27 13:24:22] AGENT STARTED
+[2026-05-27 13:24:22] ============================================================
+[2026-05-27 15:33:27] ============================================================
+[2026-05-27 15:33:27] AGENT STARTED
+[2026-05-27 15:33:27] ============================================================
+[2026-05-27 15:33:32] SEND ERROR: HTTPConnectionPool(host='192.168.0.158', port=5000): Max retries exceeded with url: /api/agent/report (Caused by NewConnectionError("HTTPConnection(host='192.168.0.158', port=5000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+[2026-05-27 16:48:10] AGENT STARTED
+[2026-05-27 16:48:14] SEND ERROR: HTTPConnectionPool(host='192.168.0.158', port=5000): Max retries exceeded with url: /api/agent/report (Caused by NewConnectionError("HTTPConnection(host='192.168.0.158', port=5000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+[2026-06-04 10:41:26] AGENT STARTED
+[2026-06-04 10:41:31] SEND ERROR: HTTPConnectionPool(host='192.168.0.158', port=5000): Max retries exceeded with url: /api/agent/report (Caused by NewConnectionError("HTTPConnection(host='192.168.0.158', port=5000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+[2026-06-04 10:43:11] AGENT STARTED
+[2026-06-04 10:57:41] AGENT STARTED

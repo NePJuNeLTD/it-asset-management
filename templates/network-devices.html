@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Network Devices</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#0f172a;
+            color:white;
+            padding:30px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th,td{
+            padding:12px;
+            border:1px solid #334155;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<h1>🌐 Network Devices</h1>
+
+<a href="/scan-network">
+
+    Scan Network
+
+</a>
+
+<br><br>
+
+<table>
+
+<tr>
+
+    <th>IP</th>
+    <th>Hostname</th>
+    <th>MAC</th>
+    <th>Vendor</th>
+    <th>Status</th>
+    <th>Last Seen</th>
+    <th>Open Ports</th>
+
+</tr>
+
+{% for d in devices %}
+
+<tr>
+
+    <td>{{ d.ip_address }}</td>
+
+    <td>{{ d.hostname }}</td>
+
+    <td>{{ d.mac_address }}</td>
+
+    <td>{{ d.vendor }}</td>
+
+    <td>{{ d.status }}</td>
+
+    <td>{{ d.last_seen }}</td>
+
+    <td>{{ d.open_ports }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

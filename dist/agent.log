@@ -1,0 +1,6 @@
+[2026-06-04 12:59:34] AGENT STARTED
+[2026-06-04 12:59:36] AV ERROR: name 'wmi' is not defined
+[2026-06-04 13:00:53] AGENT STARTED
+[2026-06-04 13:00:55] AV ERROR: name 'wmi' is not defined
+[2026-08-11 16:48:54] AGENT STARTED
+[2026-08-11 16:48:58] SEND ERROR: HTTPConnectionPool(host='192.168.0.158', port=5000): Max retries exceeded with url: /api/agent/report (Caused by NewConnectionError("HTTPConnection(host='192.168.0.158', port=5000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))

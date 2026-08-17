@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Assign Notebook</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+
+            font-family:'Kanit',sans-serif;
+
+            background:
+            linear-gradient(135deg,#020617,#0f172a,#1e293b);
+
+            min-height:100vh;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            color:white;
+
+            padding:20px;
+        }
+
+        .card{
+
+            width:100%;
+            max-width:550px;
+
+            background:rgba(255,255,255,0.05);
+
+            border:1px solid rgba(255,255,255,0.08);
+
+            border-radius:24px;
+
+            padding:35px;
+
+            backdrop-filter:blur(14px);
+
+            box-shadow:
+            0 10px 40px rgba(0,0,0,0.4);
+        }
+
+        .title{
+
+            text-align:center;
+
+            margin-bottom:30px;
+        }
+
+        .title h1{
+
+            font-size:32px;
+
+            margin-bottom:8px;
+        }
+
+        .title p{
+
+            color:#cbd5e1;
+
+            font-size:14px;
+        }
+
+        .form-group{
+
+            margin-bottom:20px;
+        }
+
+        label{
+
+            display:block;
+
+            margin-bottom:8px;
+
+            font-size:15px;
+
+            color:#e2e8f0;
+        }
+
+        input,
+        select{
+
+            width:100%;
+
+            padding:14px 16px;
+
+            border:none;
+
+            border-radius:14px;
+
+            background:rgba(255,255,255,0.08);
+
+            color:white;
+
+            font-family:'Kanit',sans-serif;
+
+            font-size:15px;
+
+            outline:none;
+
+            transition:0.2s;
+        }
+
+        input:focus,
+        select:focus{
+
+            background:rgba(255,255,255,0.12);
+
+            border:1px solid #3b82f6;
+        }
+
+        select option{
+
+            background:#0f172a;
+            color:white;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        .info-box{
+
+            background:rgba(37,99,235,0.15);
+
+            border:1px solid rgba(59,130,246,0.3);
+
+            padding:14px;
+
+            border-radius:14px;
+
+            margin-bottom:24px;
+
+            color:#bfdbfe;
+
+            font-size:14px;
+
+            line-height:1.6;
+        }
+
+        .button-group{
+
+            display:flex;
+
+            gap:12px;
+
+            margin-top:10px;
+        }
+
+        .btn{
+
+            flex:1;
+
+            padding:14px;
+
+            border:none;
+
+            border-radius:14px;
+
+            font-family:'Kanit',sans-serif;
+
+            font-size:15px;
+
+            font-weight:600;
+
+            cursor:pointer;
+
+            transition:0.2s;
+        }
+
+        .btn-save{
+
+            background:#2563eb;
+            color:white;
+        }
+
+        .btn-save:hover{
+
+            background:#1d4ed8;
+        }
+
+        .btn-back{
+
+            background:rgba(255,255,255,0.08);
+            color:white;
+            text-decoration:none;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .btn-back:hover{
+
+            background:rgba(255,255,255,0.12);
+        }
+
+        .footer{
+
+            margin-top:24px;
+
+            text-align:center;
+
+            font-size:13px;
+
+            color:#94a3b8;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="title">
+
+        <h1>💻 Assign Notebook</h1>
+
+        <p>
+            ระบบมอบหมาย Notebook ให้พนักงาน
+        </p>
+
+    </div>
+
+    <div class="info-box">
+
+        📌 เมื่อ Assign แล้ว Notebook จะเปลี่ยนสถานะเป็น
+        <b>in_use</b>
+        และถูกบันทึกประวัติการใช้งานอัตโนมัติ
+
+    </div>
+
+    <form method="POST">
+
+        <!-- EMPLOYEE -->
+
+        <div class="form-group">
+
+            <label>
+                👤 เลือกพนักงาน
+            </label>
+
+            <select name="employee_id" required>
+
+                <option value="">
+                    -- เลือกพนักงาน --
+                </option>
+
+                {% for emp in employees %}
+
+                <option value="{{ emp.id }}">
+
+                    {{ emp.name }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <!-- NOTEBOOK -->
+
+        <div class="form-group">
+
+            <label>
+                💻 เลือก Notebook
+            </label>
+
+            <select name="notebook_id" required>
+
+                <option value="">
+                    -- เลือก Notebook --
+                </option>
+
+                {% for nb in notebooks %}
+
+                <option value="{{ nb.id }}">
+
+                    {{ nb.asset_code }}
+                    -
+                    {{ nb.brand }}
+                    {{ nb.model }}
+                    ({{ nb.serial_number }})
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <!-- DATE -->
+
+        <div class="form-group">
+
+            <label>
+                📅 วันที่เริ่มใช้งาน
+            </label>
+
+            <input
+                type="date"
+                name="assign_date"
+                required
+            >
+
+        </div>
+
+        <!-- BUTTON -->
+
+        <div class="button-group">
+
+            <button
+                type="submit"
+                class="btn btn-save"
+            >
+
+                ✅ Assign Notebook
+
+            </button>
+
+            <a
+                href="/notebooks"
+                class="btn btn-back"
+            >
+
+                🔙 กลับ
+
+            </a>
+
+        </div>
+
+    </form>
+
+    <div class="footer">
+
+        Notebook Management System
+
+    </div>
+
+</div>
+
+</body>
+</html>

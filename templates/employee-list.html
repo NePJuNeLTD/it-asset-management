@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>รายชื่อพนักงาน</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    min-height:100vh;
+
+    font-family:'Kanit',sans-serif;
+
+    background:
+    radial-gradient(circle at top left,#2563eb 0%,transparent 25%),
+    radial-gradient(circle at bottom right,#1d4ed8 0%,transparent 20%),
+    #0f172a;
+
+    color:white;
+
+    padding:40px 20px;
+}
+
+/* CONTAINER */
+
+.container{
+
+    max-width:1500px;
+
+    margin:auto;
+}
+
+/* HEADER */
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+}
+
+.left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+}
+
+.title-box h1{
+
+    font-size:42px;
+
+    margin-bottom:6px;
+}
+
+.title-box p{
+
+    color:#94a3b8;
+
+    font-size:15px;
+}
+
+/* BUTTON */
+
+.btn{
+
+    height:54px;
+
+    padding:0 22px;
+
+    border-radius:16px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+    transition:0.35s;
+
+    border:1px solid transparent;
+}
+
+.back-btn{
+
+    background:#1e293b;
+
+    color:white;
+
+    border:1px solid #334155;
+}
+
+.back-btn:hover{
+
+    background:#334155;
+
+    transform:translateY(-3px);
+}
+
+.add-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+
+    color:white;
+
+    box-shadow:
+    0 10px 25px rgba(37,99,235,0.35);
+}
+
+.add-btn:hover{
+
+    transform:
+    translateY(-4px)
+    scale(1.02);
+
+    box-shadow:
+    0 18px 35px rgba(37,99,235,0.45);
+}
+
+/* SEARCH */
+
+.search-box{
+
+    margin-bottom:25px;
+
+    position:relative;
+}
+
+.search-box input{
+
+    width:100%;
+
+    height:60px;
+
+    padding:0 25px 0 60px;
+
+    border:none;
+
+    border-radius:18px;
+
+    background:rgba(30,41,59,0.95);
+
+    color:white;
+
+    font-size:16px;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    outline:none;
+
+    transition:0.3s;
+}
+
+.search-box input:focus{
+
+    border:1px solid #60a5fa;
+
+    box-shadow:
+    0 0 0 4px rgba(96,165,250,0.12);
+}
+
+.search-icon{
+
+    position:absolute;
+
+    top:50%;
+    left:22px;
+
+    transform:translateY(-50%);
+
+    font-size:20px;
+
+    opacity:0.7;
+}
+
+/* TABLE CARD */
+
+.table-card{
+
+    background:rgba(15,23,42,0.92);
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(14px);
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,0.35);
+}
+
+/* TABLE */
+
+.table-wrapper{
+
+    overflow:auto;
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:1100px;
+}
+
+/* HEAD */
+
+thead{
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+}
+
+th{
+
+    padding:22px 20px;
+
+    text-align:left;
+
+    font-size:14px;
+
+    letter-spacing:0.5px;
+
+    color:white;
+}
+
+/* BODY */
+
+td{
+
+    padding:20px;
+
+    border-bottom:1px solid rgba(255,255,255,0.06);
+
+    color:#e2e8f0;
+
+    transition:0.25s;
+}
+
+tbody tr{
+
+    transition:0.25s;
+}
+
+tbody tr:hover{
+
+    background:rgba(51,65,85,0.45);
+}
+
+/* BADGE */
+
+.badge{
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:inline-block;
+}
+
+.badge-it{
+    background:rgba(37,99,235,0.18);
+    color:#93c5fd;
+}
+
+/* ACTION */
+
+.action{
+
+    display:flex;
+
+    gap:10px;
+}
+
+.action-btn{
+
+    height:42px;
+
+    padding:0 16px;
+
+    border-radius:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    transition:0.3s;
+}
+
+/* EDIT */
+
+.edit-btn{
+
+    background:rgba(37,99,235,0.15);
+
+    color:#93c5fd;
+
+    border:1px solid rgba(59,130,246,0.25);
+}
+
+.edit-btn:hover{
+
+    background:#2563eb;
+
+    color:white;
+
+    transform:translateY(-2px);
+}
+
+/* DELETE */
+
+.delete-btn{
+
+    background:rgba(220,38,38,0.15);
+
+    color:#fca5a5;
+
+    border:1px solid rgba(220,38,38,0.25);
+}
+
+.delete-btn:hover{
+
+    background:#dc2626;
+
+    color:white;
+
+    transform:translateY(-2px);
+}
+
+/* EMPTY */
+
+.empty{
+
+    text-align:center;
+
+    padding:60px;
+
+    color:#94a3b8;
+
+    font-size:16px;
+}
+
+/* EMPLOYEE CLICK */
+
+.employee-name{
+
+    cursor:pointer;
+
+    color:#93c5fd;
+
+    font-weight:600;
+
+    transition:0.25s;
+}
+
+.employee-name:hover{
+
+    color:white;
+
+    text-shadow:0 0 10px #60a5fa;
+}
+
+/* POPUP */
+
+.popup-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,0.72);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+    backdrop-filter:blur(6px);
+}
+
+.popup{
+
+    width:520px;
+
+    max-width:92%;
+
+    max-height:90vh;
+
+    overflow:auto;
+
+    background:#0f172a;
+
+    border-radius:26px;
+
+    padding:28px;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,0.5);
+
+    animation:popupShow .25s ease;
+}
+
+.popup h2{
+
+    color:#60a5fa;
+
+    margin-bottom:20px;
+
+    font-size:30px;
+}
+
+.popup-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:20px;
+}
+
+.popup-card{
+
+    background:rgba(255,255,255,0.05);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    border-radius:18px;
+
+    padding:18px;
+
+    margin-bottom:16px;
+}
+
+.popup-card-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:14px;
+
+    color:#93c5fd;
+}
+
+.popup-card p{
+
+    margin-bottom:10px;
+
+    color:#e2e8f0;
+
+    word-break:break-word;
+}
+
+.popup-card p:last-child{
+
+    margin-bottom:0;
+}
+
+.close-btn{
+
+    width:100%;
+
+    height:52px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ef4444,
+        #dc2626
+    );
+
+    color:white;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    margin-top:10px;
+
+    transition:0.25s;
+}
+
+.close-btn:hover{
+
+    transform:translateY(-2px);
+}
+
+/* ANIMATION */
+
+@keyframes popupShow{
+
+    from{
+
+        opacity:0;
+
+        transform:
+        scale(.85)
+        translateY(20px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+        scale(1)
+        translateY(0);
+    }
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+    }
+
+    .left{
+
+        width:100%;
+    }
+
+    .title-box h1{
+
+        font-size:34px;
+    }
+
+    .action{
+
+        flex-direction:column;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="left">
+
+            <a href="/menu" class="btn back-btn">
+                ← กลับเมนู
+            </a>
+
+            <div class="title-box">
+
+                <h1>
+                    👨‍💼 รายชื่อพนักงาน
+                </h1>
+
+                <p>
+                    ระบบจัดการข้อมูลพนักงานภายในองค์กร
+                </p>
+
+            </div>
+
+        </div>
+
+        <a href="/employee-add" class="btn add-btn">
+            ➕ เพิ่มพนักงาน
+        </a>
+
+    </div>
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <div class="search-icon">
+            🔍
+        </div>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="ค้นหาชื่อพนักงาน / แผนก / ตำแหน่ง"
+        >
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+        <div class="table-wrapper">
+
+            <table id="employeeTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>รหัส</th>
+                        <th>รหัสพนักงาน</th>
+                        <th>ชื่อ - นามสกุล</th>
+                        <th>วันที่เริ่มงาน</th>
+                        <th>ฝ่าย / แผนก</th>
+                        <th>ตำแหน่ง</th>
+                        <th>จัดการ</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% if employees %}
+
+                        {% for emp in employees %}
+
+                        <tr>
+
+                            <td>
+                                {{ loop.index }}
+                            </td>
+
+                            <td>
+                                {{ emp.employee_code }}
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="employee-name"
+
+                                    onclick='openPopup(`
+
+                                    <div class="popup-title">
+
+                                        <h2>
+                                            👨‍💼 {{ emp.name }}
+                                        </h2>
+
+                                    </div>
+
+                                    <div class="popup-card">
+
+                                        <div class="popup-card-title">
+                                            🖥 ข้อมูล Computer
+                                        </div>
+
+                                        <p>
+                                            <b>Computer :</b>
+                                            {{ emp.computer.pc_name if emp.computer else "-" }}
+                                        </p>
+
+                                        <p>
+                                            <b>IP Address :</b>
+                                            {{ emp.computer.ip_address if emp.computer else "-" }}
+                                        </p>
+
+                                        <p>
+                                            <b>Serial Number :</b>
+                                            {{ emp.computer.serial_number if emp.computer else "-" }}
+                                        </p>
+
+                                    </div>
+
+                                    <div class="popup-card">
+
+                                        <div class="popup-card-title">
+                                            💻 License Software
+                                        </div>
+
+                                        {% if emp.licenses %}
+
+                                            {% for lic in emp.licenses %}
+
+                                            <p>
+                                                <b>{{ lic.software }}</b>
+                                            </p>
+
+                                            <p>
+                                                📅 Start :
+                                                {{ lic.start_date or "-" }}
+                                            </p>
+
+                                            <p>
+                                                ⏰ Expiry :
+                                                {{ lic.expiry_date or "-" }}
+                                            </p>
+
+                                            <hr style="border-color:rgba(255,255,255,0.08);margin:14px 0;">
+
+                                            {% endfor %}
+
+                                        {% else %}
+
+                                            <p>
+                                                🚫 ไม่มี License
+                                            </p>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                    `)'
+
+                                >
+
+                                    👤 {{ emp.name }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+                                📅 {{ emp.start_date }}
+                            </td>
+
+                            <td>
+
+                                <span class="badge badge-it">
+                                    {{ emp.department }}
+                                </span>
+
+                            </td>
+
+                            <td>
+                                💼 {{ emp.position }}
+                            </td>
+
+                            <td>
+
+                                <div class="action">
+
+                                    <a
+                                        href="/employee-edit/{{ emp.id }}"
+                                        class="action-btn edit-btn"
+                                    >
+                                        ✏ แก้ไข
+                                    </a>
+
+                                    <a
+                                        href="/employee-delete/{{ emp.id }}"
+                                        class="action-btn delete-btn"
+                                        onclick="return confirm('ยืนยันการลบพนักงาน ?')"
+                                    >
+                                        🗑 ลบ
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="7" class="empty">
+
+                                🚫 ยังไม่มีข้อมูลพนักงาน
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- POPUP -->
+
+<div class="popup-overlay" id="popupOverlay">
+
+    <div class="popup">
+
+        <div id="popupContent"></div>
+
+        <button
+            class="close-btn"
+            onclick="closePopup()"
+        >
+            ปิด
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* SEARCH */
+
+const searchInput =
+document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function(){
+
+    const filter =
+    this.value.toLowerCase();
+
+    const rows =
+    document.querySelectorAll(
+        "#employeeTable tbody tr"
+    );
+
+    rows.forEach(row => {
+
+        const text =
+        row.innerText.toLowerCase();
+
+        row.style.display =
+        text.includes(filter)
+        ? ""
+        : "none";
+
+    });
+
+});
+
+/* POPUP */
+
+function openPopup(content){
+
+    document.getElementById(
+        "popupContent"
+    ).innerHTML = content;
+
+    document.getElementById(
+        "popupOverlay"
+    ).style.display = "flex";
+
+    document.body.style.overflow = "hidden";
+}
+
+function closePopup(){
+
+    document.getElementById(
+        "popupOverlay"
+    ).style.display = "none";
+
+    document.body.style.overflow = "auto";
+}
+
+/* CLICK OUTSIDE */
+
+document.getElementById(
+    "popupOverlay"
+).addEventListener("click",(e)=>{
+
+    if(e.target.id === "popupOverlay"){
+
+        closePopup();
+    }
+
+});
+
+/* ESC CLOSE */
+
+document.addEventListener("keydown",(e)=>{
+
+    if(e.key === "Escape"){
+
+        closePopup();
+    }
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Device Detail</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:'Kanit',sans-serif;
+
+    background:
+    linear-gradient(135deg,#020617,#0f172a,#1e293b);
+
+    color:white;
+
+    min-height:100vh;
+
+    padding:30px;
+}
+
+.container{
+
+    max-width:1400px;
+
+    margin:auto;
+}
+
+.topbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+}
+
+.title{
+
+    font-size:42px;
+
+    font-weight:700;
+}
+
+.title span{
+
+    color:#60a5fa;
+}
+
+.btn{
+
+    padding:12px 20px;
+
+    border-radius:14px;
+
+    text-decoration:none;
+
+    color:white;
+
+    background:#334155;
+
+    font-weight:600;
+}
+
+.btn:hover{
+
+    background:#475569;
+}
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(320px,1fr));
+
+    gap:20px;
+}
+
+.card{
+
+    background:rgba(255,255,255,0.05);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    border-radius:24px;
+
+    padding:25px;
+
+    backdrop-filter:blur(10px);
+}
+
+.card h3{
+
+    margin-bottom:20px;
+
+    color:#60a5fa;
+}
+
+.item{
+
+    margin-bottom:16px;
+}
+
+.label{
+
+    color:#94a3b8;
+
+    font-size:13px;
+
+    margin-bottom:4px;
+}
+
+.value{
+
+    font-size:16px;
+
+    font-weight:600;
+}
+
+.repair-item{
+
+    background:#0f172a;
+
+    border-radius:18px;
+
+    padding:18px;
+
+    margin-top:15px;
+}
+
+.repair-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+}
+
+.badge{
+
+    display:inline-block;
+
+    padding:8px 14px;
+
+    border-radius:12px;
+
+    font-size:13px;
+
+    font-weight:700;
+}
+
+.available{
+    background:#16a34a;
+}
+
+.inuse{
+    background:#dc2626;
+}
+
+.repair{
+    background:#f59e0b;
+    color:black;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="topbar">
+
+        <div class="title">
+
+            💻 DEVICE <span>DETAIL</span>
+
+        </div>
+
+        <a href="/notebooks"
+           class="btn">
+
+            ← กลับรายการ
+
+        </a>
+
+    </div>
+
+    <div class="grid">
+
+        <!-- DEVICE -->
+
+        <div class="card">
+
+            <h3>
+                📦 ข้อมูลอุปกรณ์
+            </h3>
+
+            <div class="item">
+                <div class="label">Asset Code</div>
+                <div class="value">
+                    {{ device.asset_code }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">ประเภท</div>
+                <div class="value">
+                    {{ device.device_type }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">Brand</div>
+                <div class="value">
+                    {{ device.brand }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">Model</div>
+                <div class="value">
+                    {{ device.model }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">Serial Number</div>
+                <div class="value">
+                    {{ device.serial_number or '-' }}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SPEC -->
+
+        <div class="card">
+
+            <h3>
+                ⚙️ Hardware Spec
+            </h3>
+
+            <div class="item">
+                <div class="label">CPU</div>
+                <div class="value">
+                    {{ device.cpu or '-' }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">RAM</div>
+                <div class="value">
+                    {{ device.ram or '-' }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">Storage</div>
+                <div class="value">
+                    {{ device.storage or '-' }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">Operating System</div>
+                <div class="value">
+                    {{ device.os or '-' }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">Office</div>
+                <div class="value">
+                    {{ device.office_version or '-' }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">Antivirus</div>
+                <div class="value">
+                    {{ device.antivirus or '-' }}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- NETWORK -->
+
+        <div class="card">
+
+            <h3>
+                🌐 Network
+            </h3>
+
+            <div class="item">
+                <div class="label">IP Address</div>
+                <div class="value">
+                    {{ device.ip_address or '-' }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">Location</div>
+                <div class="value">
+                    {{ device.location or '-' }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">Status</div>
+
+                {% if device.status == "available" %}
+
+                    <span class="badge available">
+                        ✅ Available
+                    </span>
+
+                {% elif device.status == "repair" %}
+
+                    <span class="badge repair">
+                        🛠 Repair
+                    </span>
+
+                {% else %}
+
+                    <span class="badge inuse">
+                        🔴 In Use
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- PRINTER -->
+
+        <div class="card">
+
+            <h3>
+                🖨 Printer Info
+            </h3>
+
+            <div class="item">
+                <div class="label">Toner Status</div>
+                <div class="value">
+                    {{ device.toner_status or '-' }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">Purchase Date</div>
+                <div class="value">
+                    {{ device.purchase_date or '-' }}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- REPAIR HISTORY -->
+
+    <div class="card"
+         style="margin-top:25px;">
+
+        <h3>
+            🛠 Repair History
+        </h3>
+
+        {% if repairs %}
+
+            {% for r in repairs %}
+
+                <div class="repair-item">
+
+                    <div class="repair-title">
+
+                        {{ r.repair_type }}
+
+                    </div>
+
+                    <div>
+                        📅 {{ r.repair_date }}
+                    </div>
+
+                    <div>
+                        💰 {{ r.cost or 0 }} บาท
+                    </div>
+
+                    <div>
+                        👨‍🔧 {{ r.repaired_by or '-' }}
+                    </div>
+
+                    <br>
+
+                    <div>
+                        {{ r.detail or '-' }}
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div style="color:#94a3b8;">
+
+                ยังไม่มีประวัติการซ่อม
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

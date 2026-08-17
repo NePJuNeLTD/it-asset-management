@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>IT Asset Management</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+
+            font-family:'Kanit',sans-serif;
+
+            background:
+            radial-gradient(circle at top left,#2563eb22,transparent 25%),
+            radial-gradient(circle at bottom right,#1d4ed822,transparent 25%),
+            linear-gradient(135deg,#020617,#0f172a,#1e293b);
+
+            min-height:100vh;
+
+            padding:30px;
+
+            color:white;
+        }
+
+        .container{
+
+            max-width:1700px;
+
+            margin:auto;
+        }
+
+        /* HEADER */
+
+        .header{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            margin-bottom:35px;
+
+            flex-wrap:wrap;
+
+            gap:20px;
+        }
+
+        .title-box h1{
+
+            font-size:48px;
+
+            font-weight:700;
+
+            letter-spacing:1px;
+        }
+
+        .title-box span{
+
+            color:#60a5fa;
+        }
+
+        .subtitle{
+
+            margin-top:8px;
+
+            color:#94a3b8;
+
+            font-size:15px;
+        }
+
+        .header-actions{
+
+            display:flex;
+
+            gap:12px;
+
+            flex-wrap:wrap;
+        }
+
+        /* BUTTON */
+
+        .btn{
+
+            padding:13px 22px;
+
+            border-radius:14px;
+
+            color:white;
+
+            text-decoration:none;
+
+            font-weight:600;
+
+            transition:.25s;
+
+            border:1px solid rgba(255,255,255,0.08);
+
+            display:inline-flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            gap:8px;
+        }
+
+        .btn:hover{
+
+            transform:translateY(-3px);
+        }
+
+        .primary-btn{
+
+            background:linear-gradient(
+                135deg,
+                #2563eb,
+                #3b82f6
+            );
+        }
+
+        .primary-btn:hover{
+
+            box-shadow:
+            0 10px 25px rgba(37,99,235,0.35);
+        }
+
+        .dark-btn{
+
+            background:#334155;
+        }
+
+        .dark-btn:hover{
+
+            background:#475569;
+        }
+
+        .danger-btn{
+
+            background:linear-gradient(
+                135deg,
+                #dc2626,
+                #ef4444
+            );
+        }
+
+        .danger-btn:hover{
+
+            box-shadow:
+            0 10px 25px rgba(239,68,68,0.35);
+        }
+
+        .return-btn{
+
+            background:linear-gradient(
+                135deg,
+                #0f766e,
+                #14b8a6
+            );
+        }
+
+        /* DASHBOARD */
+
+        .dashboard{
+
+            display:grid;
+
+            grid-template-columns:
+            repeat(auto-fit,minmax(250px,1fr));
+
+            gap:20px;
+
+            margin-bottom:30px;
+        }
+
+        .stat-card{
+
+            background:rgba(255,255,255,0.05);
+
+            border:1px solid rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(12px);
+
+            border-radius:24px;
+
+            padding:25px;
+
+            transition:.3s;
+        }
+
+        .stat-card:hover{
+
+            transform:translateY(-4px);
+
+            border-color:#60a5fa;
+        }
+
+        .stat-icon{
+
+            font-size:34px;
+
+            margin-bottom:15px;
+        }
+
+        .stat-title{
+
+            color:#94a3b8;
+
+            margin-bottom:10px;
+        }
+
+        .stat-number{
+
+            font-size:34px;
+
+            font-weight:700;
+        }
+
+        /* SEARCH */
+
+        .search-box{
+
+            margin-bottom:25px;
+
+            position:relative;
+        }
+
+        .search-box input{
+
+            width:100%;
+
+            height:65px;
+
+            border:none;
+
+            outline:none;
+
+            border-radius:18px;
+
+            background:rgba(15,23,42,0.9);
+
+            color:white;
+
+            padding:0 20px 0 60px;
+
+            font-size:16px;
+
+            border:1px solid rgba(255,255,255,0.08);
+        }
+
+        .search-box input:focus{
+
+            border:1px solid #60a5fa;
+
+            box-shadow:
+            0 0 0 4px rgba(96,165,250,0.15);
+        }
+
+        .search-icon{
+
+            position:absolute;
+
+            top:50%;
+
+            left:20px;
+
+            transform:translateY(-50%);
+
+            font-size:22px;
+
+            opacity:.7;
+        }
+
+        /* TABLE */
+
+        .table-container{
+
+            overflow-x:auto;
+
+            border-radius:28px;
+
+            background:rgba(255,255,255,0.05);
+
+            backdrop-filter:blur(14px);
+
+            border:1px solid rgba(255,255,255,0.08);
+
+            box-shadow:
+            0 15px 40px rgba(0,0,0,0.35);
+        }
+
+        table{
+
+            width:100%;
+
+            border-collapse:collapse;
+
+            min-width:1700px;
+        }
+
+        thead{
+
+            background:
+            linear-gradient(
+                135deg,
+                #0f172a,
+                #1e293b
+            );
+        }
+
+        th{
+
+            padding:20px;
+
+            font-size:14px;
+
+            white-space:nowrap;
+
+            color:#f8fafc;
+
+            text-transform:uppercase;
+
+            letter-spacing:0.5px;
+        }
+
+        td{
+
+            padding:18px;
+
+            text-align:center;
+
+            border-bottom:1px solid rgba(255,255,255,0.06);
+
+            white-space:nowrap;
+
+            transition:.2s;
+        }
+
+        tbody tr{
+
+            transition:.25s;
+        }
+
+        tbody tr:hover{
+
+            background:rgba(59,130,246,0.08);
+        }
+
+        /* TYPE */
+
+        .type{
+
+            padding:8px 14px;
+
+            border-radius:12px;
+
+            font-size:13px;
+
+            font-weight:700;
+
+            display:inline-block;
+        }
+
+        .notebook{
+            background:#2563eb;
+        }
+
+        .pc{
+            background:#7c3aed;
+        }
+
+        .printer{
+            background:#ea580c;
+        }
+
+        /* STATUS */
+
+        .available,
+        .inuse,
+        .repair{
+
+            padding:8px 14px;
+
+            border-radius:12px;
+
+            font-weight:700;
+
+            display:inline-block;
+
+            min-width:110px;
+        }
+
+        .available{
+            background:#16a34a;
+        }
+
+        .inuse{
+            background:#dc2626;
+        }
+
+        .repair{
+            background:#f59e0b;
+            color:black;
+        }
+
+        /* TEXT */
+
+        .empty{
+            color:#94a3b8;
+        }
+
+        .user-name{
+
+            font-weight:600;
+
+            color:#93c5fd;
+        }
+
+        .spec{
+
+            font-size:13px;
+
+            color:#cbd5e1;
+
+            line-height:1.7;
+        }
+
+        .serial{
+
+            font-family:monospace;
+
+            color:#f8fafc;
+        }
+
+        .asset{
+
+            font-weight:700;
+
+            color:#60a5fa;
+        }
+
+        .action-group{
+
+            display:flex;
+
+            justify-content:center;
+
+            gap:10px;
+
+            flex-wrap:wrap;
+        }
+
+        /* FOOTER */
+
+        .footer{
+
+            margin-top:30px;
+
+            text-align:center;
+
+            color:#94a3b8;
+
+            font-size:14px;
+        }
+
+        @media(max-width:768px){
+
+            body{
+                padding:20px;
+            }
+
+            .header{
+
+                flex-direction:column;
+
+                align-items:flex-start;
+            }
+
+            .title-box h1{
+                font-size:36px;
+            }
+
+            .btn{
+                width:100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="title-box">
+
+            <h1>
+                🚀 IT ASSET <span>MANAGEMENT</span>
+            </h1>
+
+            <div class="subtitle">
+
+                ระบบจัดการ Notebook / PC / Printer / Asset ภายในองค์กร
+
+            </div>
+
+        </div>
+
+        <div class="header-actions">
+
+            <a href="/notebook-add"
+               class="btn primary-btn">
+
+                ➕ Add Device
+
+            </a>
+
+            <a href="/assign-notebook"
+               class="btn primary-btn">
+
+                👨‍💻 Assign Device
+
+            </a>
+
+            <a href="/notebook-history"
+               class="btn dark-btn">
+
+                📜 History
+
+            </a>
+
+            <a href="/menu"
+               class="btn dark-btn">
+
+                ← กลับเมนู
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- DASHBOARD -->
+
+    <div class="dashboard">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                💻
+            </div>
+
+            <div class="stat-title">
+                Total Devices
+            </div>
+
+            <div class="stat-number">
+                {{ notebooks|length }}
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ✅
+            </div>
+
+            <div class="stat-title">
+                Available
+            </div>
+
+            <div class="stat-number">
+                {{ available_count }}
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🔴
+            </div>
+
+            <div class="stat-title">
+                In Use
+            </div>
+
+            <div class="stat-number">
+                {{ inuse_count }}
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🛠
+            </div>
+
+            <div class="stat-title">
+                Repair
+            </div>
+
+            <div class="stat-number">
+                {{ repair_count }}
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <div class="search-icon">
+            🔍
+        </div>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="ค้นหา Asset / Brand / Model / User"
+        >
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="table-container">
+
+        <table id="assetTable">
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Type</th>
+
+                    <th>Asset Code</th>
+
+                    <th>Brand / Model</th>
+
+                    <th>Spec</th>
+
+                    <th>Serial</th>
+
+                    <th>Purchase Date</th>
+
+                    <th>User</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for nb in notebooks %}
+
+                <tr>
+
+                    <td>
+                        {{ nb.id }}
+                    </td>
+
+                    <td>
+
+                        {% if nb.device_type == "PC" %}
+
+                            <span class="type pc">
+                                🖥 PC
+                            </span>
+
+                        {% elif nb.device_type == "Printer" %}
+
+                            <span class="type printer">
+                                🖨 Printer
+                            </span>
+
+                        {% else %}
+
+                            <span class="type notebook">
+                                💻 Notebook
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <div class="asset">
+                            {{ nb.asset_code }}
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        <strong>
+                            {{ nb.brand }}
+                        </strong>
+
+                        <div class="spec">
+                            {{ nb.model }}
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        <div class="spec">
+
+                            💻 {{ nb.cpu }}
+
+                            <br>
+
+                            🧠 {{ nb.ram }}
+
+                            <br>
+
+                            💾 {{ nb.storage }}
+
+                        </div>
+
+                    </td>
+
+                    <td class="serial">
+
+                        {{ nb.serial_number }}
+
+                    </td>
+
+                    <td>
+
+                        📅 {{ nb.purchase_date }}
+
+                    </td>
+
+                    <td>
+
+                        {% if nb.employee_name %}
+
+                            <span class="user-name">
+
+                                👤 {{ nb.employee_name }}
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="empty">
+                                -
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if nb.status == "available" %}
+
+                            <span class="available">
+                                ✅ Available
+                            </span>
+
+                        {% elif nb.status == "repair" %}
+
+                            <span class="repair">
+                                🛠 Repair
+                            </span>
+
+                        {% else %}
+
+                            <span class="inuse">
+                                🔴 In Use
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <div class="action-group">
+
+                            {% if nb.status == "in_use" %}
+
+                                <a href="/return-notebook/{{ nb.id }}"
+                                   class="btn return-btn">
+
+                                    ↩ Return
+
+                                </a>
+
+                            {% endif %}
+
+                            <a href="/device/{{ nb.id }}"
+                            class="btn primary-btn">
+
+                                👁 View
+
+                            </a>
+
+                            <a href="/notebook-repairs/{{ nb.id }}"
+                               class="btn dark-btn">
+
+                                🛠 Repair
+
+                            </a>
+
+                            <a href="/delete-notebook/{{ nb.id }}"
+                               class="btn danger-btn"
+                               onclick="return confirm('ยืนยันการลบ Device นี้ ?')">
+
+                                🗑 Delete
+
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="footer">
+
+        © 2026 IT Asset Management System
+
+    </div>
+
+</div>
+
+<script>
+
+const searchInput =
+document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function(){
+
+    const filter =
+    this.value.toLowerCase();
+
+    const rows =
+    document.querySelectorAll(
+        "#assetTable tbody tr"
+    );
+
+    rows.forEach(row => {
+
+        const text =
+        row.innerText.toLowerCase();
+
+        row.style.display =
+        text.includes(filter)
+        ? ""
+        : "none";
+
+    });
+
+});
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Employee</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:'Kanit',sans-serif;
+
+    background:
+    radial-gradient(circle at top left,#2563eb 0%,transparent 25%),
+    radial-gradient(circle at bottom right,#1d4ed8 0%,transparent 20%),
+    #0f172a;
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:30px;
+
+    color:white;
+}
+
+.card{
+
+    width:100%;
+
+    max-width:950px;
+
+    background:rgba(15,23,42,0.95);
+
+    border-radius:30px;
+
+    padding:40px;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,0.45);
+
+    backdrop-filter:blur(16px);
+}
+
+.header{
+
+    margin-bottom:35px;
+}
+
+.header h1{
+
+    font-size:40px;
+
+    margin-bottom:8px;
+}
+
+.header p{
+
+    color:#94a3b8;
+}
+
+/* GRID */
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:22px;
+}
+
+.input-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+}
+
+.full{
+
+    grid-column:1 / -1;
+}
+
+label{
+
+    color:#94a3b8;
+
+    font-size:15px;
+}
+
+/* INPUT */
+
+input,
+select{
+
+    height:58px;
+
+    border:none;
+
+    border-radius:16px;
+
+    padding:0 18px;
+
+    background:#1e293b;
+
+    color:white;
+
+    font-size:15px;
+
+    outline:none;
+
+    border:1px solid rgba(255,255,255,0.06);
+
+    transition:0.25s;
+}
+
+input:focus,
+select:focus{
+
+    border:1px solid #60a5fa;
+
+    box-shadow:
+    0 0 0 4px rgba(96,165,250,0.15);
+}
+
+select option{
+
+    background:#0f172a;
+}
+
+/* SECTION */
+
+.section{
+
+    margin-top:40px;
+}
+
+.section-title{
+
+    font-size:24px;
+
+    margin-bottom:20px;
+
+    color:#93c5fd;
+}
+
+/* COMPUTER BOX */
+
+.info-box{
+
+    background:rgba(255,255,255,0.04);
+
+    border:1px solid rgba(255,255,255,0.06);
+
+    border-radius:20px;
+
+    padding:24px;
+}
+
+/* LICENSE */
+
+.license-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    overflow:hidden;
+
+    border-radius:18px;
+}
+
+.license-table thead{
+
+    background:#2563eb;
+}
+
+.license-table th{
+
+    padding:16px;
+
+    text-align:left;
+}
+
+.license-table td{
+
+    padding:16px;
+
+    border-bottom:1px solid rgba(255,255,255,0.06);
+
+    background:rgba(255,255,255,0.03);
+}
+
+/* BUTTON */
+
+.btn-group{
+
+    display:flex;
+
+    gap:16px;
+
+    margin-top:40px;
+}
+
+button,
+a{
+
+    flex:1;
+
+    height:58px;
+
+    border:none;
+
+    border-radius:16px;
+
+    font-weight:bold;
+
+    text-decoration:none;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.save-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+
+    color:white;
+
+    box-shadow:
+    0 12px 30px rgba(37,99,235,0.35);
+}
+
+.save-btn:hover{
+
+    transform:translateY(-3px);
+}
+
+.back-btn{
+
+    background:#1e293b;
+
+    color:white;
+
+    border:1px solid #334155;
+}
+
+.back-btn:hover{
+
+    background:#334155;
+
+    transform:translateY(-3px);
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .btn-group{
+
+        flex-direction:column;
+    }
+
+    .card{
+
+        padding:28px;
+    }
+
+    .header h1{
+
+        font-size:32px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<form method="POST" class="card">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            ✏ แก้ไขข้อมูลพนักงาน
+        </h1>
+
+        <p>
+            แก้ไขข้อมูลพนักงาน เครื่องคอมพิวเตอร์ และ License
+        </p>
+
+    </div>
+
+    <!-- EMPLOYEE -->
+
+    <div class="grid">
+
+        <div class="input-group">
+
+            <label>👤 ชื่อพนักงาน</label>
+
+            <input
+                type="text"
+                name="full_name"
+                <input
+    type="text"
+    name="full_name"
+    value="{{ employee.name or '' }}"
+    required
+>
+                required
+            >
+
+        </div>
+
+        <div class="input-group">
+
+            <label>🆔 รหัสพนักงาน</label>
+
+            <input
+                type="text"
+                name="employee_code"
+                value="{{ employee.employee_code or '' }}"
+            >
+
+        </div>
+
+        <div class="input-group">
+
+            <label>🏢 แผนก</label>
+
+            <select name="department">
+
+                <option value="">
+                    เลือกแผนก
+                </option>
+
+                {% for dept in departments %}
+
+                <option
+                    value="{{ dept.name }}"
+                    {% if employee.department == dept.name %}
+                    selected
+                    {% endif %}
+                >
+                    {{ dept.name }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="input-group">
+
+            <label>💼 ตำแหน่ง</label>
+
+            <input
+                type="text"
+                name="position"
+                value="{{ employee.position or '' }}"
+            >
+
+        </div>
+
+        <div class="input-group full">
+
+            <label>📅 วันที่เริ่มงาน</label>
+
+            <input
+                type="date"
+                name="start_date"
+                value="{{ employee.start_date }}"
+            >
+
+        </div>
+
+    </div>
+
+    <!-- COMPUTER -->
+
+    <div class="section">
+
+        <div class="section-title">
+            🖥 ข้อมูล Computer
+        </div>
+
+        <div class="info-box">
+
+            <div class="grid">
+
+                <div class="input-group">
+
+                    <label>Computer Name</label>
+
+                    <input
+                        type="text"
+                        value="{{ computer.pc_name if computer else '' }}"
+                        disabled
+                    >
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>IP Address</label>
+
+                    <input
+                        type="text"
+                        value="{{ computer.ip_address if computer else '' }}"
+                        disabled
+                    >
+
+                </div>
+
+                <div class="input-group full">
+
+                    <label>Serial Number</label>
+
+                    <input
+                        type="text"
+                        value="{{ computer.serial_number if computer else '' }}"
+                        disabled
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- LICENSE -->
+
+    <div class="section">
+
+        <div class="section-title">
+            💻 License Software
+        </div>
+
+        <table class="license-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Software</th>
+                    <th>Start Date</th>
+                    <th>Expiry Date</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% if licenses %}
+
+                    {% for lic in licenses %}
+
+                    <tr>
+
+                        <td>
+                            {{ lic.software }}
+                        </td>
+
+                        <td>
+                            {{ lic.start_date or '-' }}
+                        </td>
+
+                        <td>
+                            {{ lic.expiry_date or '-' }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="3">
+
+                            🚫 ไม่มี License
+
+                        </td>
+
+                    </tr>
+
+                {% endif %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- BUTTON -->
+
+    <div class="btn-group">
+
+        <button
+            type="submit"
+            class="save-btn"
+        >
+            💾 บันทึกข้อมูล
+        </button>
+
+        <a
+            href="/employee-list"
+            class="back-btn"
+        >
+            ← กลับหน้ารายชื่อ
+        </a>
+
+    </div>
+
+</form>
+
+</body>
+
+</html>

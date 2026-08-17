@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>รายละเอียดพนักงาน</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:'Kanit',sans-serif;
+
+    background:
+    radial-gradient(circle at top left,#1d4ed8 0%,#0f172a 40%,#020617 100%);
+
+    min-height:100vh;
+
+    color:white;
+
+    padding:40px;
+}
+
+.container{
+
+    max-width:1200px;
+
+    margin:auto;
+}
+
+/* CARD */
+
+.card{
+
+    background:rgba(255,255,255,0.06);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    border-radius:30px;
+
+    padding:40px;
+
+    backdrop-filter:blur(16px);
+
+    box-shadow:
+    0 12px 30px rgba(0,0,0,0.3);
+}
+
+/* HEADER */
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:35px;
+
+    flex-wrap:wrap;
+
+    gap:20px;
+}
+
+.header h1{
+
+    font-size:42px;
+}
+
+.badge{
+
+    padding:10px 18px;
+
+    border-radius:14px;
+
+    background:#2563eb;
+
+    font-weight:bold;
+}
+
+/* INFO */
+
+.info-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+
+    gap:20px;
+
+    margin-bottom:40px;
+}
+
+.info-box{
+
+    background:rgba(255,255,255,0.05);
+
+    border-radius:20px;
+
+    padding:22px;
+}
+
+.info-box h3{
+
+    color:#93c5fd;
+
+    margin-bottom:10px;
+
+    font-size:16px;
+}
+
+.info-box p{
+
+    font-size:20px;
+
+    font-weight:600;
+}
+
+/* TABLE */
+
+.table-container{
+
+    overflow-x:auto;
+
+    border-radius:22px;
+
+    overflow:hidden;
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+thead{
+
+    background:#2563eb;
+}
+
+th{
+
+    padding:16px;
+
+    text-align:left;
+}
+
+td{
+
+    padding:16px;
+
+    border-bottom:1px solid rgba(255,255,255,0.08);
+
+    background:rgba(255,255,255,0.03);
+}
+
+tbody tr:hover{
+
+    background:rgba(59,130,246,0.08);
+}
+
+/* BUTTON */
+
+.back-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-top:30px;
+
+    padding:14px 22px;
+
+    border-radius:14px;
+
+    text-decoration:none;
+
+    color:white;
+
+    background:#1e293b;
+
+    transition:0.3s;
+}
+
+.back-btn:hover{
+
+    background:#334155;
+
+    transform:translateY(-3px);
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    body{
+        padding:20px;
+    }
+
+    .header h1{
+        font-size:30px;
+    }
+
+    .card{
+        padding:25px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="header">
+
+            <div>
+                <h1>
+                    👨‍💼 {{ employee.name }}
+                </h1>
+            </div>
+
+            <div class="badge">
+                {{ employee.department }}
+            </div>
+
+        </div>
+
+        <!-- INFO -->
+
+        <div class="info-grid">
+
+            <div class="info-box">
+                <h3>รหัสพนักงาน</h3>
+                <p>{{ employee.employee_code }}</p>
+            </div>
+
+            <div class="info-box">
+                <h3>ตำแหน่ง</h3>
+                <p>{{ employee.position }}</p>
+            </div>
+
+            <div class="info-box">
+                <h3>วันที่เริ่มงาน</h3>
+                <p>{{ employee.start_date }}</p>
+            </div>
+
+        </div>
+
+        <!-- LICENSE TABLE -->
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Software</th>
+                        <th>Machine</th>
+                        <th>IP</th>
+                        <th>Serial</th>
+                        <th>Start</th>
+                        <th>Expiry</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for lic in licenses %}
+
+                    <tr>
+
+                        <td>{{ lic.software_name }}</td>
+                        <td>{{ lic.machine }}</td>
+                        <td>{{ lic.ip }}</td>
+                        <td>{{ lic.serial_number }}</td>
+                        <td>{{ lic.start_date }}</td>
+                        <td>{{ lic.expiry_date }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <a
+            href="/employee-list"
+            class="back-btn"
+        >
+            ← กลับหน้ารายชื่อ
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

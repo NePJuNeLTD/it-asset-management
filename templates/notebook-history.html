@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Notebook History</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#0f172a;
+            color:white;
+            padding:30px;
+        }
+
+        table{
+
+            width:100%;
+
+            border-collapse:collapse;
+
+            margin-top:20px;
+        }
+
+        th,td{
+
+            padding:14px;
+
+            border:1px solid #334155;
+
+            text-align:center;
+        }
+
+        th{
+            background:#1e293b;
+        }
+
+        tr:nth-child(even){
+            background:#111827;
+        }
+
+        .using{
+            color:#22c55e;
+            font-weight:bold;
+        }
+
+        .returned{
+            color:#f59e0b;
+            font-weight:bold;
+        }
+
+        a{
+            color:#60a5fa;
+            text-decoration:none;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<h1>📜 Notebook History</h1>
+
+<a href="/notebooks">
+
+    ← กลับรายการ Notebook
+
+</a>
+
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th>ID</th>
+
+            <th>Asset</th>
+
+            <th>Notebook</th>
+
+            <th>ผู้ใช้งาน</th>
+
+            <th>Assign Date</th>
+
+            <th>Return Date</th>
+
+            <th>Status</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    {% for h in histories %}
+
+        <tr>
+
+            <td>{{ h.id }}</td>
+
+            <td>{{ h.asset_code }}</td>
+
+            <td>
+
+                {{ h.brand }}
+
+                {{ h.model }}
+
+            </td>
+
+            <td>{{ h.employee_name }}</td>
+
+            <td>{{ h.assign_date }}</td>
+
+            <td>
+
+                {% if h.return_date %}
+
+                    {{ h.return_date }}
+
+                {% else %}
+
+                    -
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                {% if h.status == "using" %}
+
+                    <span class="using">
+
+                        USING
+
+                    </span>
+
+                {% else %}
+
+                    <span class="returned">
+
+                        RETURNED
+
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+</body>
+</html>

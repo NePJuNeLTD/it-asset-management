@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>เพิ่มข้อมูลพนักงาน</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    min-height:100vh;
+
+    background:
+    radial-gradient(circle at top left,#2563eb 0%,transparent 25%),
+    radial-gradient(circle at bottom right,#1d4ed8 0%,transparent 20%),
+    #0f172a;
+
+    font-family:'Kanit',sans-serif;
+
+    color:white;
+
+    padding:40px 20px;
+}
+
+/* BACKGROUND EFFECT */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    width:500px;
+    height:500px;
+
+    background:rgba(37,99,235,0.15);
+
+    filter:blur(120px);
+
+    top:-150px;
+    left:-150px;
+
+    z-index:-1;
+}
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    width:400px;
+    height:400px;
+
+    background:rgba(59,130,246,0.12);
+
+    filter:blur(120px);
+
+    bottom:-120px;
+    right:-100px;
+
+    z-index:-1;
+}
+
+/* CONTAINER */
+
+.container{
+
+    max-width:950px;
+
+    margin:auto;
+
+    background:rgba(15,23,42,0.92);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    border-radius:32px;
+
+    overflow:hidden;
+
+    backdrop-filter:blur(15px);
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,0.45),
+    0 0 50px rgba(37,99,235,0.15);
+
+}
+
+/* HEADER */
+
+.header{
+
+    position:relative;
+
+    padding:45px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #1e40af
+    );
+
+    overflow:hidden;
+}
+
+.header::before{
+
+    content:'';
+
+    position:absolute;
+
+    width:300px;
+    height:300px;
+
+    background:rgba(255,255,255,0.08);
+
+    border-radius:50%;
+
+    top:-120px;
+    right:-80px;
+}
+
+.header h1{
+
+    position:relative;
+
+    font-size:42px;
+
+    margin-bottom:12px;
+
+    z-index:2;
+}
+
+.header p{
+
+    position:relative;
+
+    color:#dbeafe;
+
+    font-size:16px;
+
+    z-index:2;
+}
+
+/* FORM AREA */
+
+.form-area{
+
+    padding:45px;
+}
+
+/* SECTION */
+
+.section-title{
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    font-size:22px;
+
+    margin-bottom:35px;
+
+    color:#93c5fd;
+
+    font-weight:bold;
+}
+
+/* GRID */
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:25px;
+}
+
+.full{
+    grid-column:1 / -1;
+}
+
+/* FORM */
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+}
+
+label{
+
+    margin-bottom:12px;
+
+    color:#cbd5e1;
+
+    font-size:15px;
+
+    font-weight:bold;
+}
+
+/* INPUT */
+
+.input-box{
+
+    position:relative;
+}
+
+.input-box span{
+
+    position:absolute;
+
+    top:50%;
+    left:16px;
+
+    transform:translateY(-50%);
+
+    font-size:18px;
+
+    opacity:0.7;
+
+    pointer-events:none;
+}
+
+/* INPUT + SELECT */
+
+input,
+select{
+
+    width:100%;
+
+    height:58px;
+
+    padding:16px 18px 16px 52px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:#1e293b;
+
+    color:white;
+
+    font-size:15px;
+
+    outline:none;
+
+    border:1px solid transparent;
+
+    transition:0.3s;
+
+    font-family:'Kanit',sans-serif;
+}
+
+select{
+
+    appearance:none;
+
+    cursor:pointer;
+
+    padding-left:18px;
+}
+
+input:focus,
+select:focus{
+
+    border:1px solid #60a5fa;
+
+    background:#273549;
+
+    box-shadow:
+    0 0 0 4px rgba(96,165,250,0.12);
+}
+
+input::placeholder{
+
+    color:#94a3b8;
+}
+
+select option{
+
+    background:#0f172a;
+
+    color:white;
+}
+
+/* ADD DEPARTMENT */
+
+.department-row{
+
+    display:flex;
+
+    gap:12px;
+
+    align-items:center;
+}
+
+.add-dept-btn{
+
+    min-width:58px;
+
+    height:58px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #10b981,
+        #059669
+    );
+
+    color:white;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.add-dept-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 10px 20px rgba(16,185,129,0.25);
+}
+
+/* MODAL */
+
+.modal{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,0.65);
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    z-index:999;
+}
+
+.modal-content{
+
+    width:90%;
+    max-width:450px;
+
+    background:#0f172a;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    border-radius:24px;
+
+    padding:30px;
+
+    box-shadow:
+    0 20px 50px rgba(0,0,0,0.45);
+}
+
+.modal-content h3{
+
+    margin-bottom:20px;
+
+    color:#93c5fd;
+
+    font-size:24px;
+}
+
+.modal-buttons{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:20px;
+}
+
+.modal-buttons button{
+
+    flex:1;
+}
+
+/* BUTTON AREA */
+
+.button-group{
+
+    display:flex;
+
+    gap:20px;
+
+    margin-top:40px;
+}
+
+/* BUTTON */
+
+.btn{
+
+    flex:1;
+
+    height:58px;
+
+    border:none;
+
+    border-radius:18px;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:0.35s;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    text-decoration:none;
+
+    font-family:'Kanit',sans-serif;
+}
+
+/* BACK */
+
+.back-btn{
+
+    background:#1e293b;
+
+    color:white;
+
+    border:1px solid #334155;
+}
+
+.back-btn:hover{
+
+    background:#334155;
+
+    transform:translateY(-3px);
+}
+
+/* SAVE */
+
+.save-btn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+
+    color:white;
+
+    box-shadow:
+    0 10px 25px rgba(37,99,235,0.35);
+}
+
+.save-btn:hover{
+
+    transform:
+    translateY(-4px)
+    scale(1.01);
+
+    box-shadow:
+    0 18px 35px rgba(37,99,235,0.45);
+}
+
+/* CANCEL */
+
+.cancel-btn{
+
+    background:#334155;
+
+    color:white;
+}
+
+/* FOOTER */
+
+.footer{
+
+    margin-top:35px;
+
+    text-align:center;
+
+    color:#64748b;
+
+    font-size:14px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-area{
+        padding:30px;
+    }
+
+    .header{
+        padding:35px;
+    }
+
+    .button-group{
+        flex-direction:column;
+    }
+
+    .header h1{
+        font-size:34px;
+    }
+
+    .department-row{
+        flex-direction:column;
+    }
+
+    .add-dept-btn{
+        width:100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            👨‍💼 เพิ่มข้อมูลพนักงาน
+        </h1>
+
+        <p>
+            จัดการข้อมูลพนักงานภายในองค์กรอย่างเป็นระบบ
+        </p>
+
+    </div>
+
+    <!-- FORM -->
+
+    <div class="form-area">
+
+        <div class="section-title">
+            📋 รายละเอียดพนักงาน
+        </div>
+
+        <form method="POST">
+
+            <div class="grid">
+
+                <!-- CODE -->
+
+                <div class="form-group">
+
+                    <label>
+                        รหัสพนักงาน
+                    </label>
+
+                    <div class="input-box">
+
+                        <span>🆔</span>
+
+                        <input
+                            type="text"
+                            name="employee_code"
+                            placeholder="เช่น EMP001"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- DATE -->
+
+                <div class="form-group">
+
+                    <label>
+                        วันที่เริ่มงาน
+                    </label>
+
+                    <div class="input-box">
+
+                        <span>📅</span>
+
+                        <input
+                            type="date"
+                            name="start_date"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- NAME -->
+
+                <div class="form-group full">
+
+                    <label>
+                        ชื่อ - นามสกุล
+                    </label>
+
+                    <div class="input-box">
+
+                        <span>👤</span>
+
+                        <input
+                            type="text"
+                            name="full_name"
+                            placeholder="กรอกชื่อพนักงาน"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- DEPARTMENT -->
+
+                <div class="form-group">
+
+                    <label>
+                        ฝ่าย / แผนก
+                    </label>
+
+                    <div class="department-row">
+
+                        <select
+                            name="department"
+                            id="departmentSelect"
+                            required
+                        >
+
+                            <option value="">
+                                เลือกแผนก
+                            </option>
+
+                            {% for dept in departments %}
+
+                            <option value="{{ dept.name }}">
+                                {{ dept.name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <button
+                            type="button"
+                            class="add-dept-btn"
+                            onclick="openModal()"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- POSITION -->
+
+                <div class="form-group">
+
+                    <label>
+                        ตำแหน่ง
+                    </label>
+
+                    <div class="input-box">
+
+                        <span>💼</span>
+
+                        <input
+                            type="text"
+                            name="position"
+                            placeholder="เช่น Programmer"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- BUTTONS -->
+
+            <div class="button-group">
+
+                <a
+                    href="/employee-list"
+                    class="btn back-btn"
+                >
+                    ← กลับหน้ารายชื่อ
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn save-btn"
+                >
+                    💾 บันทึกข้อมูลพนักงาน
+                </button>
+
+            </div>
+
+        </form>
+
+        <div class="footer">
+            LICENSE MANAGEMENT SYSTEM © 2026
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MODAL -->
+
+<div class="modal" id="departmentModal">
+
+    <div class="modal-content">
+
+        <h3>
+            ➕ เพิ่มแผนกใหม่
+        </h3>
+
+        <div class="input-box">
+
+            <span>🏢</span>
+
+            <input
+                type="text"
+                id="newDepartment"
+                placeholder="กรอกชื่อแผนก"
+            >
+
+        </div>
+
+        <div class="modal-buttons">
+
+            <button
+                class="btn cancel-btn"
+                onclick="closeModal()"
+            >
+                ยกเลิก
+            </button>
+
+            <button
+                class="btn save-btn"
+                onclick="addDepartment()"
+            >
+                บันทึก
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const modal = document.getElementById("departmentModal");
+
+const departmentSelect =
+document.getElementById("departmentSelect");
+
+function openModal(){
+
+    modal.style.display = "flex";
+}
+
+function closeModal(){
+
+    modal.style.display = "none";
+}
+
+function addDepartment(){
+
+    const input =
+    document.getElementById("newDepartment");
+
+    const value = input.value.trim();
+
+    if(value === ""){
+
+        alert("กรุณากรอกชื่อแผนก");
+        return;
+    }
+
+    const option =
+    document.createElement("option");
+
+    option.value = value;
+
+    option.text = value;
+
+    option.selected = true;
+
+    departmentSelect.appendChild(option);
+
+    input.value = "";
+
+    closeModal();
+}
+
+window.onclick = function(event){
+
+    if(event.target == modal){
+
+        closeModal();
+    }
+}
+
+</script>
+
+</body>
+</html>

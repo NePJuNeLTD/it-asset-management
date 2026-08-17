@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>License Management System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    font-family:'Kanit',sans-serif;
+
+    background:
+    radial-gradient(circle at top left,#3b82f6 0%,transparent 25%),
+    radial-gradient(circle at top right,#2563eb 0%,transparent 20%),
+    radial-gradient(circle at bottom left,#1d4ed8 0%,transparent 20%),
+    #020617;
+
+    min-height:100vh;
+
+    color:white;
+
+    overflow-x:hidden;
+
+    position:relative;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar{
+    width:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:#0f172a;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#2563eb;
+    border-radius:20px;
+}
+
+/* BACKGROUND EFFECT */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    width:600px;
+    height:600px;
+
+    background:rgba(59,130,246,0.15);
+
+    border-radius:50%;
+
+    filter:blur(120px);
+
+    top:-250px;
+    left:-250px;
+
+    z-index:-1;
+}
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    width:500px;
+    height:500px;
+
+    background:rgba(37,99,235,0.14);
+
+    border-radius:50%;
+
+    filter:blur(120px);
+
+    bottom:-200px;
+    right:-200px;
+
+    z-index:-1;
+}
+
+/* CONTAINER */
+
+.container{
+
+    width:92%;
+
+    max-width:1500px;
+
+    margin:auto;
+
+    padding:40px 0 60px;
+}
+
+/* TOPBAR */
+
+.topbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:60px;
+
+    flex-wrap:wrap;
+
+    gap:20px;
+}
+
+/* LOGO */
+
+.logo-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+}
+
+.logo-icon{
+
+    width:78px;
+    height:78px;
+
+    border-radius:24px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:40px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #60a5fa
+    );
+
+    box-shadow:
+    0 20px 40px rgba(37,99,235,0.35);
+}
+
+.logo h1{
+
+    font-size:42px;
+
+    font-weight:800;
+
+    letter-spacing:2px;
+}
+
+.logo span{
+
+    color:#60a5fa;
+}
+
+.subtitle{
+
+    color:#cbd5e1;
+
+    margin-top:6px;
+
+    font-size:15px;
+}
+
+/* PROFILE */
+
+.profile{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    background:rgba(255,255,255,0.08);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(12px);
+
+    padding:14px 22px;
+
+    border-radius:22px;
+
+    box-shadow:
+    0 12px 30px rgba(0,0,0,0.25);
+}
+
+.profile-avatar{
+
+    width:52px;
+    height:52px;
+
+    border-radius:50%;
+
+    background:
+    linear-gradient(
+        135deg,
+        #3b82f6,
+        #2563eb
+    );
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:24px;
+}
+
+.profile-info h3{
+
+    font-size:17px;
+}
+
+.profile-info p{
+
+    color:#94a3b8;
+
+    font-size:13px;
+}
+
+/* HERO */
+
+.hero{
+
+    text-align:center;
+
+    margin-bottom:60px;
+
+    animation:fadeIn 1s ease;
+}
+
+.hero-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    background:rgba(59,130,246,0.15);
+
+    border:1px solid rgba(96,165,250,0.25);
+
+    color:#93c5fd;
+
+    margin-bottom:22px;
+
+    font-size:14px;
+}
+
+.hero h2{
+
+    font-size:78px;
+
+    font-weight:800;
+
+    line-height:1.1;
+
+    margin-bottom:18px;
+
+    letter-spacing:2px;
+}
+
+.hero h2 span{
+
+    background:
+    linear-gradient(
+        135deg,
+        #60a5fa,
+        #2563eb
+    );
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+
+    max-width:900px;
+
+    margin:auto;
+
+    color:#cbd5e1;
+
+    font-size:20px;
+
+    line-height:1.8;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+    gap:24px;
+
+    margin-bottom:60px;
+}
+
+.stat-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:rgba(15,23,42,0.92);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    border-radius:30px;
+
+    padding:30px;
+
+    transition:0.35s;
+
+    backdrop-filter:blur(14px);
+
+    box-shadow:
+    0 20px 50px rgba(0,0,0,0.25);
+}
+
+.stat-card:hover{
+
+    transform:
+    translateY(-8px)
+    scale(1.02);
+
+    border-color:#60a5fa;
+
+    box-shadow:
+    0 25px 60px rgba(37,99,235,0.28);
+}
+
+.stat-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,0.04);
+
+    top:-60px;
+    right:-60px;
+}
+
+.stat-icon{
+
+    font-size:52px;
+
+    margin-bottom:22px;
+}
+
+.stat-title{
+
+    color:#94a3b8;
+
+    margin-bottom:10px;
+
+    font-size:16px;
+}
+
+.stat-number{
+
+    font-size:42px;
+
+    font-weight:800;
+}
+
+/* SECTION TITLE */
+
+.section-title{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:28px;
+
+    flex-wrap:wrap;
+
+    gap:14px;
+}
+
+.section-title h3{
+
+    font-size:34px;
+
+    font-weight:700;
+}
+
+.section-title p{
+
+    color:#94a3b8;
+}
+
+/* GRID */
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+    gap:28px;
+}
+
+/* CARD */
+
+.card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    text-decoration:none;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        145deg,
+        rgba(30,41,59,0.98),
+        rgba(15,23,42,0.98)
+    );
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    border-radius:32px;
+
+    padding:35px;
+
+    transition:0.35s;
+
+    backdrop-filter:blur(18px);
+
+    min-height:270px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    box-shadow:
+    0 18px 50px rgba(0,0,0,0.28);
+}
+
+.card::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:220px;
+    height:220px;
+
+    background:rgba(255,255,255,0.04);
+
+    border-radius:50%;
+
+    top:-100px;
+    right:-100px;
+}
+
+.card::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(59,130,246,0.08),
+        transparent
+    );
+
+    opacity:0;
+
+    transition:0.35s;
+}
+
+.card:hover::after{
+
+    opacity:1;
+}
+
+.card:hover{
+
+    transform:
+    translateY(-12px)
+    scale(1.02);
+
+    border-color:#60a5fa;
+
+    box-shadow:
+    0 25px 60px rgba(37,99,235,0.32);
+}
+
+/* TOP */
+
+.card-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    margin-bottom:25px;
+}
+
+.icon{
+
+    width:82px;
+    height:82px;
+
+    border-radius:24px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:40px;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(37,99,235,0.18),
+        rgba(59,130,246,0.1)
+    );
+
+    border:1px solid rgba(96,165,250,0.18);
+
+    backdrop-filter:blur(10px);
+}
+
+.badge{
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    background:rgba(34,197,94,0.15);
+
+    color:#86efac;
+
+    border:1px solid rgba(34,197,94,0.2);
+}
+
+/* CONTENT */
+
+.title{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    margin-bottom:14px;
+}
+
+.desc{
+
+    color:#cbd5e1;
+
+    line-height:1.8;
+
+    font-size:15px;
+}
+
+/* FOOT */
+
+.card-footer{
+
+    margin-top:30px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+
+.open-btn{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:#93c5fd;
+
+    font-weight:700;
+
+    font-size:15px;
+}
+
+.arrow{
+
+    width:38px;
+    height:38px;
+
+    border-radius:50%;
+
+    background:rgba(59,130,246,0.15);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    transition:0.25s;
+}
+
+.card:hover .arrow{
+
+    transform:translateX(6px);
+}
+
+/* QUICK MENU */
+
+.quick-menu{
+
+    margin-top:70px;
+
+    padding:40px;
+
+    border-radius:32px;
+
+    background:rgba(15,23,42,0.92);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(16px);
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,0.35);
+}
+
+.quick-grid{
+
+    margin-top:25px;
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+
+    gap:20px;
+}
+
+.quick-btn{
+
+    height:75px;
+
+    border-radius:22px;
+
+    text-decoration:none;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:12px;
+
+    font-weight:700;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(37,99,235,0.15),
+        rgba(59,130,246,0.08)
+    );
+
+    border:1px solid rgba(96,165,250,0.12);
+
+    transition:0.3s;
+}
+
+.quick-btn:hover{
+
+    transform:
+    translateY(-5px);
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+}
+
+/* STATUS BAR */
+
+.status-bar{
+
+    margin-top:50px;
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+
+    gap:20px;
+}
+
+.status-box{
+
+    padding:25px;
+
+    border-radius:24px;
+
+    background:rgba(15,23,42,0.92);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    text-align:center;
+}
+
+.status-box h4{
+
+    margin-bottom:10px;
+
+    font-size:18px;
+}
+
+.status-online{
+    color:#4ade80;
+}
+
+.status-warning{
+    color:#facc15;
+}
+
+.status-danger{
+    color:#f87171;
+}
+
+/* FOOTER */
+
+.footer{
+
+    margin-top:70px;
+
+    text-align:center;
+
+    color:#94a3b8;
+
+    font-size:14px;
+
+    line-height:1.8;
+}
+
+/* ANIMATION */
+
+@keyframes fadeIn{
+
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .hero h2{
+
+        font-size:54px;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .topbar{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+    }
+
+    .hero h2{
+
+        font-size:42px;
+    }
+
+    .hero p{
+
+        font-size:16px;
+    }
+
+    .logo h1{
+
+        font-size:32px;
+    }
+
+    .quick-menu{
+
+        padding:25px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+        <div class="logo-box">
+
+            <div class="logo-icon">
+                🚀
+            </div>
+
+            <div class="logo">
+
+                <h1>
+                    LICENSE <span>MANAGEMENT</span>
+                </h1>
+
+                <div class="subtitle">
+                    ระบบจัดการ License / Employee / Network / Notebook แบบครบวงจร
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="profile">
+
+            <div class="profile-avatar">
+                👨‍💻
+            </div>
+
+            <div class="profile-info">
+
+                <h3>
+                    {{ current_user }}
+                </h3>
+
+                <p>
+                    System Administrator
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- HERO -->
+
+    <div class="hero">
+
+        <div class="hero-badge">
+            ⚡ SMART IT MANAGEMENT PLATFORM
+        </div>
+
+        <h2>
+            CONTROL YOUR <br>
+            <span>IT SYSTEM</span>
+        </h2>
+
+        <p>
+            ระบบจัดการ License พนักงาน Notebook Network Scan
+            และระบบแจ้งเตือนทั้งหมดในที่เดียว
+        </p>
+
+    </div>
+
+    <!-- DASHBOARD -->
+
+    <div class="dashboard">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                👨‍💼
+            </div>
+
+            <div class="stat-title">
+                Employees
+            </div>
+
+            <div class="stat-number">
+                {{ total_employees }}
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                💻
+            </div>
+
+            <div class="stat-title">
+                Total Licenses
+            </div>
+
+            <div class="stat-number">
+                {{ total_licenses }}
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🌐
+            </div>
+
+            <div class="stat-title">
+                Network Devices
+            </div>
+
+            <div class="stat-number">
+                {{ total_devices }}
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ⚠️
+            </div>
+
+            <div class="stat-title">
+                Expiry Alert
+            </div>
+
+            <div class="stat-number">
+                {{ expired_count }}
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TITLE -->
+
+    <div class="section-title">
+
+        <div>
+
+            <h3>
+                ⚡ Main Features
+            </h3>
+
+            <p>
+                เมนูหลักทั้งหมดของระบบจัดการองค์กร
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- GRID -->
+
+    <div class="grid">
+
+        <a class="card" href="/">
+            <div>
+                <div class="card-top">
+                    <div class="icon">📊</div>
+                    <div class="badge">LIVE</div>
+                </div>
+
+                <div class="title">
+                    Dashboard
+                </div>
+
+                <div class="desc">
+                    ดูข้อมูล License ทั้งหมด สถิติ ระบบแจ้งเตือน และรายงานภาพรวมแบบ Real-time
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="open-btn">เปิดเมนู</div>
+                <div class="arrow">→</div>
+            </div>
+        </a>
+
+        <a class="card" href="/employee-list">
+            <div>
+                <div class="card-top">
+                    <div class="icon">👨‍💼</div>
+                    <div class="badge">HR</div>
+                </div>
+
+                <div class="title">
+                    Employee List
+                </div>
+
+                <div class="desc">
+                    จัดการข้อมูลพนักงาน รายชื่อ แผนก ตำแหน่ง และข้อมูลภายในทั้งหมด
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="open-btn">เปิดเมนู</div>
+                <div class="arrow">→</div>
+            </div>
+        </a>
+
+        <a class="card" href="/notebooks">
+            <div>
+                <div class="card-top">
+                    <div class="icon">💻</div>
+                    <div class="badge">DEVICE</div>
+                </div>
+
+                <div class="title">
+                    Notebook List
+                </div>
+
+                <div class="desc">
+                    จัดการ Notebook Serial Number รุ่น อุปกรณ์ และข้อมูลผู้ใช้งาน
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="open-btn">เปิดเมนู</div>
+                <div class="arrow">→</div>
+            </div>
+        </a>
+
+        <a class="card" href="/assign-notebook">
+            <div>
+                <div class="card-top">
+                    <div class="icon">🔗</div>
+                    <div class="badge">LINK</div>
+                </div>
+
+                <div class="title">
+                    Assign Notebook
+                </div>
+
+                <div class="desc">
+                    ผูก Notebook เข้ากับพนักงาน และติดตามการใช้งานอุปกรณ์
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="open-btn">เปิดเมนู</div>
+                <div class="arrow">→</div>
+            </div>
+        </a>
+
+        <a class="card" href="/network-devices">
+            <div>
+                <div class="card-top">
+                    <div class="icon">🌐</div>
+                    <div class="badge">ONLINE</div>
+                </div>
+
+                <div class="title">
+                    Network Scan
+                </div>
+
+                <div class="desc">
+                    Scan Network อัตโนมัติ ตรวจจับอุปกรณ์ IP Hostname และ Port
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="open-btn">เปิดเมนู</div>
+                <div class="arrow">→</div>
+            </div>
+        </a>
+
+        <a class="card" href="/domain-computers">
+            <div>
+                <div class="card-top">
+                    <div class="icon">🖥️</div>
+                    <div class="badge">DOMAIN</div>
+                </div>
+
+                <div class="title">
+                    Domain Computers
+                </div>
+
+                <div class="desc">
+                    ตรวจสอบเครื่องใน Domain ดู User CPU RAM Storage และ Windows Version
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="open-btn">เปิดเมนู</div>
+                <div class="arrow">→</div>
+            </div>
+        </a>
+
+        <a class="card" href="/export-excel">
+            <div>
+                <div class="card-top">
+                    <div class="icon">📁</div>
+                    <div class="badge">XLSX</div>
+                </div>
+
+                <div class="title">
+                    Export Excel
+                </div>
+
+                <div class="desc">
+                    Export รายงานทั้งหมดออกเป็น Excel พร้อมข้อมูล License และพนักงาน
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="open-btn">เปิดเมนู</div>
+                <div class="arrow">→</div>
+            </div>
+        </a>
+
+        <a class="card" href="/send-alert">
+            <div>
+                <div class="card-top">
+                    <div class="icon">🔔</div>
+                    <div class="badge">ALERT</div>
+                </div>
+
+                <div class="title">
+                    Send Alert
+                </div>
+
+                <div class="desc">
+                    แจ้งเตือน License ใกล้หมดอายุ ผ่าน LINE และระบบอัตโนมัติ
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="open-btn">เปิดเมนู</div>
+                <div class="arrow">→</div>
+            </div>
+        </a>
+
+        <a class="card" href="/line-test">
+            <div>
+                <div class="card-top">
+                    <div class="icon">💬</div>
+                    <div class="badge">API</div>
+                </div>
+
+                <div class="title">
+                    LINE Test
+                </div>
+
+                <div class="desc">
+                    ทดสอบระบบส่งข้อความ Notification และ LINE API
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="open-btn">เปิดเมนู</div>
+                <div class="arrow">→</div>
+            </div>
+        </a>
+
+        <a class="card" href="/logout">
+            <div>
+                <div class="card-top">
+                    <div class="icon">🚪</div>
+                    <div class="badge">EXIT</div>
+                </div>
+
+                <div class="title">
+                    Logout
+                </div>
+
+                <div class="desc">
+                    ออกจากระบบจัดการ และปิดการใช้งาน Session
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="open-btn">ออกจากระบบ</div>
+                <div class="arrow">→</div>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- QUICK MENU -->
+
+    <div class="quick-menu">
+
+        <div class="section-title">
+
+            <div>
+
+                <h3>
+                    ⚡ Quick Access
+                </h3>
+
+                <p>
+                    เมนูด่วนสำหรับใช้งานประจำ
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="quick-grid">
+
+            <a href="/add" class="quick-btn">
+                ➕ เพิ่ม License
+            </a>
+
+            <a href="/employee-add" class="quick-btn">
+                👨‍💼 เพิ่มพนักงาน
+            </a>
+
+            <a href="/scan-network" class="quick-btn">
+                🌐 Scan Network
+            </a>
+
+            <a href="/import-excel" class="quick-btn">
+                📥 Import Excel
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- SYSTEM STATUS -->
+
+    <div class="status-bar">
+
+        <div class="status-box">
+            <h4>
+                🟢 Server Status
+            </h4>
+
+            <div class="status-online">
+                ONLINE
+            </div>
+        </div>
+
+        <div class="status-box">
+            <h4>
+                ⚠ License Expiry
+            </h4>
+
+            <div class="status-warning">
+                {{ expired_count }} รายการ
+            </div>
+        </div>
+
+        <div class="status-box">
+            <h4>
+                🔒 Security
+            </h4>
+
+            <div class="status-online">
+                Protected
+            </div>
+        </div>
+
+        <div class="status-box">
+            <h4>
+                🌐 Network
+            </h4>
+
+            <div class="status-online">
+                Connected
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        © 2026 License Management System <br>
+
+        Developed for Enterprise IT Management
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

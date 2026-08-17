@@ -1,0 +1,26 @@
+<form method="POST" action="/department-add">
+
+    <input
+        type="text"
+        name="name"
+        placeholder="ชื่อแผนก"
+        required
+    >
+
+    <button type="submit">
+        ➕ เพิ่มแผนก
+    </button>
+
+</form>
+
+<hr>
+
+{% for dept in departments %}
+
+<div>
+
+    {{ dept.name }}
+
+</div>
+
+{% endfor %}

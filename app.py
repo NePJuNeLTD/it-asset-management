@@ -107,7 +107,7 @@ DEMO_STORE = {
          "username": "demo.user", "bios_version": "1.18.0",
          "mainboard": "Dell 0ABC", "uptime_hours": 8,
          "antivirus": "Microsoft Defender", "wifi_ssid": "OFFICE-DEMO",
-         "cpu_usage": 18, "ram_usage": 47, "status": "online", "last_seen": "2026-08-17 14:40"},
+         "cpu_usage": 18, "ram_usage": 47, "status": "online", "last_seen": datetime(2026, 8, 17, 14, 40)},
         {"id": 2, "hostname": "DEMO-PC-02", "ip_address": "192.168.0.102",
          "mac_address": "00:00:00:00:00:03", "manufacturer": "HP",
          "model": "ProDesk 400 G9", "serial_number": "DEMO-SN-002",
@@ -117,7 +117,7 @@ DEMO_STORE = {
          "username": "account.demo", "bios_version": "02.15",
          "mainboard": "HP Demo Board", "uptime_hours": 23,
          "antivirus": "Microsoft Defender", "wifi_ssid": "OFFICE-DEMO",
-         "cpu_usage": 9, "ram_usage": 39, "status": "online", "last_seen": "2026-08-17 14:38"},
+         "cpu_usage": 9, "ram_usage": 39, "status": "online", "last_seen": datetime(2026, 8, 17, 14, 38)},
         {"id": 3, "hostname": "DEMO-PC-03", "ip_address": "192.168.0.103",
          "mac_address": "00:00:00:00:00:04", "manufacturer": "Lenovo",
          "model": "ThinkCentre Neo 50s", "serial_number": "DEMO-SN-003",
@@ -127,7 +127,7 @@ DEMO_STORE = {
          "username": "hr.demo", "bios_version": "M3AKT50A",
          "mainboard": "Lenovo Demo Board", "uptime_hours": 0,
          "antivirus": "Microsoft Defender", "wifi_ssid": "-",
-         "cpu_usage": 0, "ram_usage": 0, "status": "offline", "last_seen": "2026-08-17 09:15"},
+         "cpu_usage": 0, "ram_usage": 0, "status": "offline", "last_seen": datetime(2026, 8, 17, 9, 15)},
     ],
 }
 

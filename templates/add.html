@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add License - IT Asset Demo</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#f6f7fb;margin:0;color:#222}
+    .wrap{max-width:900px;margin:40px auto;padding:0 20px}
+    .card{background:#fff;border-radius:16px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+    h1{margin-top:0}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    label{display:block;font-weight:600;margin-bottom:6px}
+    input{width:100%;box-sizing:border-box;padding:11px;border:1px solid #d8dbe3;border-radius:10px}
+    .soft{border:1px solid #e4e7ee;border-radius:12px;padding:14px;margin-top:14px}
+    .soft label{font-weight:500}
+    .actions{display:flex;gap:10px;margin-top:22px}
+    button,a.btn{display:inline-block;border:0;border-radius:10px;padding:11px 18px;text-decoration:none;cursor:pointer}
+    button{background:#111827;color:white}
+    a.btn{background:#e5e7eb;color:#111827}
+    .hint{color:#6b7280;font-size:14px}
+    @media(max-width:700px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>เพิ่ม License (Demo)</h1>
+    <p class="hint">ข้อมูลที่เพิ่มเป็นข้อมูลชั่วคราวสำหรับ HR Demo และจะรีเซ็ตเมื่อ Render restart/redeploy</p>
+
+    <form method="post">
+      <div class="grid">
+        <div>
+          <label>ชื่อพนักงาน</label>
+          <input name="name" required placeholder="เช่น Demo Employee">
+        </div>
+        <div>
+          <label>ตำแหน่ง</label>
+          <input name="position" required placeholder="เช่น IT Support">
+        </div>
+        <div>
+          <label>Machine Name</label>
+          <input name="machine_name" placeholder="DEMO-PC-02">
+        </div>
+        <div>
+          <label>IP Address</label>
+          <input name="ip_address" placeholder="192.168.0.102">
+        </div>
+        <div>
+          <label>Serial Number</label>
+          <input name="serial_number" placeholder="DEMO-SN-002">
+        </div>
+      </div>
+
+      {% set softwares = ["Antivirus","Winspeed","AutoCAD","Visio","PDF Pro","DR-Site(UTH)","Business Std","Business Basic"] %}
+      <h3>Software</h3>
+      {% for sw in softwares %}
+      <div class="soft">
+        <label>
+          <input type="checkbox" name="software" value="{{ sw }}" style="width:auto;margin-right:8px">
+          {{ sw }}
+        </label>
+        <div class="grid">
+          <div>
+            <label>Start Date</label>
+            <input type="date" name="start_{{ sw }}">
+          </div>
+          <div>
+            <label>Expiry Date</label>
+            <input type="date" name="expiry_{{ sw }}">
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+      <div class="actions">
+        <button type="submit">บันทึก Demo</button>
+        <a class="btn" href="/">กลับหน้าหลัก</a>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>
